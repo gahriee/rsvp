@@ -57,13 +57,13 @@
 
 ## Phase 3 — Admin Dashboard
 
-- [ ] Admin login page (`/admin/login`) + auth middleware
-- [ ] Admin dashboard overview (`/admin`) — total RSVPs, attending count, gifts remaining
-- [ ] Manage Gifts page (`/admin/gifts`) — add/edit/delete, mark reserved manually
-- [ ] View RSVPs page (`/admin/rsvps`) — table/list, filter by attending status
-- [ ] Protect all `/admin/*` routes and admin API routes from unauthenticated access
+- [x] Admin login page (`/admin/login`) + auth middleware
+- [x] Admin dashboard overview (`/admin`) — total RSVPs, attending count, gifts remaining
+- [x] Manage Gifts page (`/admin/gifts`) — add/edit/delete, mark reserved manually
+- [x] View RSVPs page (`/admin/rsvps`) — table/list, filter by attending status
+- [x] Protect all `/admin/*` routes and admin API routes from unauthenticated access
 
-**Phase 3 target completion:** **\_\_**
+**Phase 3 target completion:** **Completed**
 
 ---
 
@@ -111,7 +111,7 @@
 | 0 — Planning & Setup   | Done        | 100%       |
 | 1 — Database & Backend | Done        | 100%       |
 | 2 — Frontend Pages     | Done        | 100%       |
-| 3 — Admin Dashboard    | Not started | 0%         |
+| 3 — Admin Dashboard    | Done        | 100%       |
 | 4 — Polish & Extras    | Not started | 0%         |
 | 5 — Testing & QA       | Not started | 0%         |
 | 6 — Launch             | Not started | 0%         |

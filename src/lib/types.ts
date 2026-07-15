@@ -5,6 +5,7 @@ import {
   createGiftSchema,
   updateGiftSchema,
   reserveGiftSchema,
+  adminLoginSchema,
 } from "./validators";
 
 export type CreateRsvpInput = z.infer<typeof createRsvpSchema>;
@@ -12,6 +13,7 @@ export type UpdateRsvpInput = z.infer<typeof updateRsvpSchema>;
 export type CreateGiftInput = z.infer<typeof createGiftSchema>;
 export type UpdateGiftInput = z.infer<typeof updateGiftSchema>;
 export type ReserveGiftInput = z.infer<typeof reserveGiftSchema>;
+export type AdminLoginInput = z.infer<typeof adminLoginSchema>;
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -50,3 +52,14 @@ export class GiftUnavailableError extends Error {
     this.name = "GiftUnavailableError";
   }
 }
+
+export interface AdminOverviewStats {
+  totalRsvps: number;
+  attendingRsvps: number;
+  decliningRsvps: number;
+  totalGuestsAttending: number;
+  totalGifts: number;
+  availableGifts: number;
+  reservedGifts: number;
+}
+

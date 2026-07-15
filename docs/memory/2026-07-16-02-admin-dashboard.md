@@ -3,10 +3,10 @@ id: 2026-07-16-02-admin-dashboard
 title: "Phase 3: Admin Dashboard & Server-Side Authentication"
 type: feature
 priority: 🔴 High
-status: 🔴 To Do
+status: 🟢 Done
 phase: 3
 created: 2026-07-16
-completed:
+completed: 2026-07-16
 ---
 
 ## Context
@@ -59,8 +59,8 @@ This memory implements the following paired unit of work:
 
 > Check if any schema modifications are required for admin operations.
 
-- [ ] Verify that `Rsvp` (`guestName`, `email`, `attending`, `numberOfGuests`, `message`, `selectedGift`, `createdAt`) and `Gift` (`name`, `description`, `imageUrl`, `status`, `reservedBy`, `createdAt`) provide all fields needed for admin statistics, filtering, and editing.
-- [ ] Write: _No schema changes required in this memory (`Gift` and `Rsvp` already support all needed admin CRUD operations)._
+- [x] Verify that `Rsvp` (`guestName`, `email`, `attending`, `numberOfGuests`, `message`, `selectedGift`, `createdAt`) and `Gift` (`name`, `description`, `imageUrl`, `status`, `reservedBy`, `createdAt`) provide all fields needed for admin statistics, filtering, and editing.
+- [x] Write: _No schema changes required in this memory (`Gift` and `Rsvp` already support all needed admin CRUD operations)._
 
 ---
 
@@ -68,10 +68,10 @@ This memory implements the following paired unit of work:
 
 > Implement lightweight, zero-dependency or secure cookie-based HMAC session verification using Node standard Web Crypto or secure signed cookies so the app remains compatible with Next.js 16 / React 19 without heavy dependency mismatches.
 
-- [ ] Replace the placeholder `isAdminAuthenticated()` in `src/lib/auth.ts` with real server-side cookie/token verification (`cookies()` from `next/headers`).
+- [x] Replace the placeholder `isAdminAuthenticated()` in `src/lib/auth.ts` with real server-side cookie/token verification (`cookies()` from `next/headers`).
   - Read `ADMIN_PASSWORD` or `NEXTAUTH_SECRET` from environment variables (`process.env.ADMIN_PASSWORD || process.env.NEXTAUTH_SECRET`).
   - Create secure helper functions `createAdminSessionToken()` and `verifyAdminSessionToken(token: string): boolean` using HMAC-SHA256 (`crypto.subtle` or `crypto.createHmac`).
-- [ ] Create `src/lib/services/adminService.ts` containing:
+- [x] Create `src/lib/services/adminService.ts` containing:
   - `getAdminOverviewStats()`: Aggregates total RSVPs, attending vs declining counts, total guests attending (`sum(numberOfGuests)` for attending), total gifts, available gifts, and reserved gifts cleanly via Mongoose queries.
 
 ---
@@ -80,10 +80,10 @@ This memory implements the following paired unit of work:
 
 > Add admin-specific interfaces and validation schemas.
 
-- [ ] In `src/lib/types.ts`, add:
+- [x] In `src/lib/types.ts`, add:
   - `AdminLoginInput` (`{ password: string }`).
   - `AdminOverviewStats` (`{ totalRsvps: number; attendingRsvps: number; decliningRsvps: number; totalGuestsAttending: number; totalGifts: number; availableGifts: number; reservedGifts: number; }`).
-- [ ] In `src/lib/validators.ts`, add:
+- [x] In `src/lib/validators.ts`, add:
   - `adminLoginSchema = z.object({ password: z.string().min(1, "Password is required") })`.
 
 ---
@@ -92,20 +92,20 @@ This memory implements the following paired unit of work:
 
 > Implement secure endpoints and enforce server-side auth checks on all admin operations.
 
-- [ ] Create `src/app/api/v1/admin/login/route.ts` (`POST` handler validating `adminLoginSchema` against `process.env.ADMIN_PASSWORD`, setting an `HttpOnly; Secure; SameSite=Strict; Path=/` cookie `admin_session`).
-- [ ] Create `src/app/api/v1/admin/logout/route.ts` (`POST` handler clearing the `admin_session` cookie).
-- [ ] Create `src/app/api/v1/admin/stats/route.ts` (`GET` handler protected by `isAdminAuthenticated()`, calling `getAdminOverviewStats()`).
-- [ ] Update existing `src/app/api/v1/rsvp/route.ts` (`GET` handler for listing RSVPs) to check `if (!(await isAdminAuthenticated())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });`.
-- [ ] Update existing `src/app/api/v1/rsvp/[id]/route.ts` (`PATCH` and `DELETE`) to require `isAdminAuthenticated()`.
-- [ ] Update existing `src/app/api/v1/gifts/route.ts` (`POST` for creating new gifts) to require `isAdminAuthenticated()`.
-- [ ] Update existing `src/app/api/v1/gifts/[id]/route.ts` (`PATCH` and `DELETE` for modifying gifts) to require `isAdminAuthenticated()`.
+- [x] Create `src/app/api/v1/admin/login/route.ts` (`POST` handler validating `adminLoginSchema` against `process.env.ADMIN_PASSWORD`, setting an `HttpOnly; Secure; SameSite=Strict; Path=/` cookie `admin_session`).
+- [x] Create `src/app/api/v1/admin/logout/route.ts` (`POST` handler clearing the `admin_session` cookie).
+- [x] Create `src/app/api/v1/admin/stats/route.ts` (`GET` handler protected by `isAdminAuthenticated()`, calling `getAdminOverviewStats()`).
+- [x] Update existing `src/app/api/v1/rsvp/route.ts` (`GET` handler for listing RSVPs) to check `if (!(await isAdminAuthenticated())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });`.
+- [x] Update existing `src/app/api/v1/rsvp/[id]/route.ts` (`PATCH` and `DELETE`) to require `isAdminAuthenticated()`.
+- [x] Update existing `src/app/api/v1/gifts/route.ts` (`POST` for creating new gifts) to require `isAdminAuthenticated()`.
+- [x] Update existing `src/app/api/v1/gifts/[id]/route.ts` (`PATCH` and `DELETE` for modifying gifts) to require `isAdminAuthenticated()`.
   > Note: `POST /api/v1/rsvp`, `GET /api/v1/gifts`, and `PATCH /api/v1/gifts/[id]/reserve` remain public/guest-facing as intended.
 
 ---
 
 ### Step 5 — Realtime / Async Events (`N/A`)
 
-- [ ] Write: _No realtime or async event bus changes required in this memory._
+- [x] Write: _No realtime or async event bus changes required in this memory._
 
 ---
 
@@ -113,18 +113,18 @@ This memory implements the following paired unit of work:
 
 > Build rich, modern, and responsive administrative dashboards and login flows.
 
-- [ ] Create `src/components/admin/AdminNavbar.tsx` & `src/app/admin/layout.tsx`:
+- [x] Create `src/components/admin/AdminNavbar.tsx` & `src/app/admin/layout.tsx`:
   - `AdminNavbar.tsx`: Provides clean, accessible tabs (`Overview`, `RSVPs`, `Gifts`, `View Live Site` link, and a logout button that hits `/api/v1/admin/logout` and redirects to `/admin/login`).
-- [ ] Create `src/app/admin/login/page.tsx` & `src/components/admin/AdminLoginClient.tsx`:
+- [x] Create `src/app/admin/login/page.tsx` & `src/components/admin/AdminLoginClient.tsx`:
   - Server component `login/page.tsx` checks `if (await isAdminAuthenticated()) redirect("/admin");`.
   - Client component `AdminLoginClient.tsx` features a sleek login box with password visibility eye-toggle, error banner, loading state, and smooth redirection to `/admin`.
-- [ ] Create `src/app/admin/page.tsx` & `src/components/admin/AdminOverviewClient.tsx`:
+- [x] Create `src/app/admin/page.tsx` & `src/components/admin/AdminOverviewClient.tsx`:
   - Server component `admin/page.tsx` checks `if (!(await isAdminAuthenticated())) redirect("/admin/login");` and fetches `getAdminOverviewStats()`.
   - Client/View component displays stat cards with gradient accents (Total RSVPs, Attending vs Declining, Total Guests Attending, Gifts Available/Reserved) and quick navigation links.
-- [ ] Create `src/app/admin/rsvps/page.tsx` & `src/components/admin/RsvpManager.tsx` (replacing the placeholder `RsvpTable.tsx`):
+- [x] Create `src/app/admin/rsvps/page.tsx` & `src/components/admin/RsvpManager.tsx` (replacing the placeholder `RsvpTable.tsx`):
   - Server component protected by server-side auth check.
   - Interactive table (`RsvpManager.tsx` + `RsvpTable.tsx`) with search (filter by guest name/email), attendance tabs (`All`, `Attending`, `Declining`), inline modal/drawer for editing attendance or guest counts (`PATCH /api/v1/rsvp/[id]`), and safe deletion (`DELETE /api/v1/rsvp/[id]`) with confirmation dialogs.
-- [ ] Create `src/app/admin/gifts/page.tsx` & `src/components/admin/GiftManager.tsx` (replacing the placeholder `GiftTable.tsx`):
+- [x] Create `src/app/admin/gifts/page.tsx` & `src/components/admin/GiftManager.tsx` (replacing the placeholder `GiftTable.tsx`):
   - Server component protected by server-side auth check.
   - Interactive grid/table (`GiftManager.tsx` + `GiftTable.tsx` + `GiftModalForm.tsx`) for adding new gifts (`POST /api/v1/gifts`), editing gift fields (`PATCH /api/v1/gifts/[id]`), manually toggling gift status (`available` vs `reserved`), and deleting gifts (`DELETE /api/v1/gifts/[id]`).
 
@@ -134,7 +134,7 @@ This memory implements the following paired unit of work:
 
 > Verify authentication enforcement and admin service logic.
 
-- [ ] Create or update unit/integration tests (`tests/admin.test.ts` with `vitest` + `mongodb-memory-server`) to verify:
+- [x] Create or update unit/integration tests (`tests/admin.test.ts` with `vitest` + `mongodb-memory-server`) to verify:
   - Unauthenticated `GET /api/v1/rsvp` returns `401 Unauthorized`.
   - Unauthenticated `POST /api/v1/gifts` returns `401 Unauthorized`.
   - `getAdminOverviewStats()` accurately calculates `totalGuestsAttending`, `attendingRsvps`, and `reservedGifts` counts.
@@ -143,7 +143,7 @@ This memory implements the following paired unit of work:
 
 ### Step 8 — Environment Variables
 
-- [ ] Ensure `.env.example` includes `ADMIN_PASSWORD` (or `NEXTAUTH_SECRET`) with clear documentation:
+- [x] Ensure `.env.example` includes `ADMIN_PASSWORD` (or `NEXTAUTH_SECRET`) with clear documentation:
   ```ini
   # Admin Dashboard Login Password (default for dev/testing: admin123)
   ADMIN_PASSWORD=admin123
@@ -153,18 +153,18 @@ This memory implements the following paired unit of work:
 
 ### Step 9 — Docs & Status Update
 
-- [ ] Run `npm run lint` to verify zero warnings or errors.
-- [ ] Run `npm run build` to verify zero type checks or compilation issues.
-- [ ] Mark all completed Phase 3 tasks as `[x]` in `docs/project-status/project-status.md`.
-- [ ] Set `status: 🟢 Done` and populate `completed` date in this memory.
+- [x] Run `npm run lint` to verify zero warnings or errors.
+- [x] Run `npm run build` to verify zero type checks or compilation issues.
+- [x] Mark all completed Phase 3 tasks as `[x]` in `docs/project-status/project-status.md`.
+- [x] Set `status: 🟢 Done` and populate `completed` date in this memory.
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] All `/admin/*` server pages and protected `/api/v1/*` routes strictly verify authentication server-side before returning data or rendering components.
-- [ ] `npm run lint` passes with **0 errors and 0 warnings**.
-- [ ] `npm run build` passes with zero type mismatches or broken route exports.
-- [ ] Admin can log in (`/admin/login`), view aggregated attendance & gift stats (`/admin`), filter/search and edit/delete RSVPs (`/admin/rsvps`), and create/edit/delete registry gifts (`/admin/gifts`).
-- [ ] No `any` types or `console.log` statements remain in committed code.
-- [ ] All new components and routes strictly use `@/app`, `@/components`, `@/lib`, and `@/models` path aliases.
+- [x] All `/admin/*` server pages and protected `/api/v1/*` routes strictly verify authentication server-side before returning data or rendering components.
+- [x] `npm run lint` passes with **0 errors and 0 warnings**.
+- [x] `npm run build` passes with zero type mismatches or broken route exports.
+- [x] Admin can log in (`/admin/login`), view aggregated attendance & gift stats (`/admin`), filter/search and edit/delete RSVPs (`/admin/rsvps`), and create/edit/delete registry gifts (`/admin/gifts`).
+- [x] No `any` types or `console.log` statements remain in committed code.
+- [x] All new components and routes strictly use `@/app`, `@/components`, `@/lib`, and `@/models` path aliases.

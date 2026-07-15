@@ -24,3 +24,8 @@ export const updateGiftSchema = createGiftSchema.partial();
 export const reserveGiftSchema = z.object({
   rsvpId: z.string().min(1, "RSVP ID is required"),
 });
+
+export const adminLoginSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+});
+
