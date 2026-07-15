@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../lib/mongodb";
-import { getAllGifts, createGift } from "../../../../lib/services/giftService";
-import { createGiftSchema } from "../../../../lib/validators";
-import { isAdminAuthenticated } from "../../../../lib/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { getAllGifts, createGift } from "@/lib/services/giftService";
+import { createGiftSchema } from "@/lib/validators";
+import { isAdminAuthenticated } from "@/lib/auth";
 import { z } from "zod";
 
 export async function GET() {

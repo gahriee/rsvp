@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../../../lib/mongodb";
-import { reserveGiftAtomically } from "../../../../../../lib/services/giftService";
-import { reserveGiftSchema } from "../../../../../../lib/validators";
-import { GiftUnavailableError } from "../../../../../../lib/types";
+import { connectToDatabase } from "@/lib/mongodb";
+import { reserveGiftAtomically } from "@/lib/services/giftService";
+import { reserveGiftSchema } from "@/lib/validators";
+import { GiftUnavailableError } from "@/lib/types";
 import { z } from "zod";
 
 interface RouteParams {

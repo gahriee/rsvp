@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/mongodb";
 import {
   getRsvpById,
   updateRsvp,
   deleteRsvp,
-} from "../../../../../lib/services/rsvpService";
-import { updateRsvpSchema } from "../../../../../lib/validators";
-import { isAdminAuthenticated } from "../../../../../lib/auth";
-import { GiftUnavailableError } from "../../../../../lib/types";
+} from "@/lib/services/rsvpService";
+import { updateRsvpSchema } from "@/lib/validators";
+import { isAdminAuthenticated } from "@/lib/auth";
+import { GiftUnavailableError } from "@/lib/types";
 import { z } from "zod";
 
 interface RouteParams {

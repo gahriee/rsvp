@@ -3,10 +3,10 @@ id: 2026-07-13-01-database-and-backend
 title: "Database & Backend Core Implementation (Phase 1)"
 type: feature
 priority: 🔴 High
-status: 🔴 To Do
+status: 🟢 Done
 phase: 1
 created: 2026-07-13
-completed:
+completed: 2026-07-14
 ---
 
 ## Context
@@ -55,31 +55,31 @@ _No dependencies — this memory can be started immediately as the highest devel
 
 ### Step 1 — Database & Dependencies (`package.json`, `src/lib/mongodb.ts`, `src/models/*`)
 
-- [ ] Install `mongoose` via `npm install mongoose` and `@types/mongoose` if required.
-- [ ] Implement `src/lib/mongodb.ts` following Next.js Serverless caching best practices (using `global._mongoose` cache to prevent connection pooling exhaustion during dev/HMR).
-- [ ] Rename `src/models/Rvsp.ts` to `src/models/Rsvp.ts` if needed, and implement the Mongoose schemas with strict TypeScript interfaces:
+- [x] Install `mongoose` via `npm install mongoose` and `@types/mongoose` if required.
+- [x] Implement `src/lib/mongodb.ts` following Next.js Serverless caching best practices (using `global._mongoose` cache to prevent connection pooling exhaustion during dev/HMR).
+- [x] Rename `src/models/Rvsp.ts` to `src/models/Rsvp.ts` if needed, and implement the Mongoose schemas with strict TypeScript interfaces:
   - `Gift.ts`: `name` (string), `description` (string), `imageUrl` (string), `status` (`"available" | "reserved"` default `"available"`), `reservedBy` (ObjectId ref to `Rsvp`, default `null`).
   - `Rsvp.ts`: `guestName` (string), `email` (string), `attending` (boolean), `numberOfGuests` (number), `message` (string), `selectedGift` (ObjectId ref to `Gift`, default `null`).
-- [ ] Ensure Mongoose models check `mongoose.models.Gift || mongoose.model("Gift", giftSchema)` to avoid OverwriteModelError in dev.
+- [x] Ensure Mongoose models check `mongoose.models.Gift || mongoose.model("Gift", giftSchema)` to avoid OverwriteModelError in dev.
 
 ---
 
 ### Step 2 — Shared Types & Validation (`src/lib/types.ts`, `src/lib/validators.ts`)
 
-- [ ] Create `src/lib/validators.ts` and define Zod schemas for:
+- [x] Create `src/lib/validators.ts` and define Zod schemas for:
   - `createRsvpSchema` & `updateRsvpSchema`
   - `createGiftSchema` & `updateGiftSchema`
   - `reserveGiftSchema` (requiring `rsvpId`)
-- [ ] Create `src/lib/types.ts` and export shared interfaces inferred from Zod schemas or corresponding directly to `Gift` and `Rsvp` database entities (`z.infer<typeof createRsvpSchema>`, etc.).
+- [x] Create `src/lib/types.ts` and export shared interfaces inferred from Zod schemas or corresponding directly to `Gift` and `Rsvp` database entities (`z.infer<typeof createRsvpSchema>`, etc.).
 
 ---
 
 ### Step 3 — Service Layer (`src/lib/services/giftService.ts`, `src/lib/services/rsvpService.ts`)
 
-- [ ] Create `src/lib/services/giftService.ts` with typed methods:
+- [x] Create `src/lib/services/giftService.ts` with typed methods:
   - `getAllGifts()`, `getGiftById(id)`, `createGift(data)`, `updateGift(id, data)`, `deleteGift(id)`.
   - `reserveGiftAtomically(giftId: string, rsvpId: string)`: Must execute `findOneAndUpdate({ _id: giftId, status: "available" }, { $set: { status: "reserved", reservedBy: rsvpId } }, { new: true })`. If null is returned, throw a custom `GiftUnavailableError`.
-- [ ] Create `src/lib/services/rsvpService.ts` with typed methods:
+- [x] Create `src/lib/services/rsvpService.ts` with typed methods:
   - `createRsvp(data)`, `getAllRsvps()`, `getRsvpById(id)`, `updateRsvp(id, data)`, `deleteRsvp(id)`.
   - Ensure that if `data.selectedGift` is provided during RSVP creation, it invokes `giftService.reserveGiftAtomically()` and links the RSVP cleanly.
 
@@ -87,33 +87,33 @@ _No dependencies — this memory can be started immediately as the highest devel
 
 ### Step 4 — Route Handlers / API Controllers (`src/app/api/v1/*`)
 
-- [ ] Implement `src/app/api/v1/gifts/route.ts` (`GET`, `POST`).
-- [ ] Implement `src/app/api/v1/gifts/[id]/route.ts` (`GET`, `PATCH`, `DELETE`).
-- [ ] Implement `src/app/api/v1/gifts/[id]/reserve/route.ts` (`PATCH`). Catch `GiftUnavailableError` and return `409 Conflict` (`{ error: "Gift is already reserved" }`).
-- [ ] Implement `src/app/api/v1/rsvp/route.ts` (`POST`, `GET`).
-- [ ] Implement `src/app/api/v1/rsvp/[id]/route.ts` (`GET`, `PATCH`, `DELETE`).
-- [ ] Ensure all handlers call `await connectToDatabase()`, validate request JSON via Zod (`validator.parse(body)`), and return properly typed JSON responses (`NextResponse.json`).
+- [x] Implement `src/app/api/v1/gifts/route.ts` (`GET`, `POST`).
+- [x] Implement `src/app/api/v1/gifts/[id]/route.ts` (`GET`, `PATCH`, `DELETE`).
+- [x] Implement `src/app/api/v1/gifts/[id]/reserve/route.ts` (`PATCH`). Catch `GiftUnavailableError` and return `409 Conflict` (`{ error: "Gift is already reserved" }`).
+- [x] Implement `src/app/api/v1/rsvp/route.ts` (`POST`, `GET`).
+- [x] Implement `src/app/api/v1/rsvp/[id]/route.ts` (`GET`, `PATCH`, `DELETE`).
+- [x] Ensure all handlers call `await connectToDatabase()`, validate request JSON via Zod (`validator.parse(body)`), and return properly typed JSON responses (`NextResponse.json`).
 
 ---
 
 ### Step 5 — Frontend API Client & Component Structure (`src/lib/apiClient.ts`, `src/components/*`)
 
-- [ ] Create `src/lib/apiClient.ts` with clean, type-safe wrapper functions for client components (`fetchGifts()`, `submitRsvp(payload)`, `reserveGift(giftId, rsvpId)`).
-- [ ] Update `src/components/gifts/GiftCard.tsx` and `src/components/gifts/GiftGrid.tsx` with proper TypeScript props (accepting `Gift` types from `src/lib/types.ts`) and interactive reservation/conflict handling UI props.
-- [ ] Update `src/components/rsvp/RsvpForm.tsx` with form state scaffolding and Zod validation integration ready for Phase 2 guest pages.
+- [x] Create `src/lib/apiClient.ts` with clean, type-safe wrapper functions for client components (`fetchGifts()`, `submitRsvp(payload)`, `reserveGift(giftId, rsvpId)`).
+- [x] Update `src/components/gifts/GiftCard.tsx` and `src/components/gifts/GiftGrid.tsx` with proper TypeScript props (accepting `Gift` types from `src/lib/types.ts`) and interactive reservation/conflict handling UI props.
+- [x] Update `src/components/rsvp/RsvpForm.tsx` with form state scaffolding and Zod validation integration ready for Phase 2 guest pages.
 
 ---
 
 ### Step 6 — Tests & Verification (`tests/giftReservation.test.ts`)
 
-- [ ] Create an integration/unit test verifying atomic concurrency: simulate two simultaneous `reserveGiftAtomically(giftId, rsvpId)` calls for the exact same available gift, and assert that exactly one succeeds while the second throws `GiftUnavailableError` (`409 Conflict`).
-- [ ] Run `npm run lint` and `npm run build` to confirm zero warnings, zero errors, and strict compilation compliance.
+- [x] Create an integration/unit test verifying atomic concurrency: simulate two simultaneous `reserveGiftAtomically(giftId, rsvpId)` calls for the exact same available gift, and assert that exactly one succeeds while the second throws `GiftUnavailableError` (`409 Conflict`).
+- [x] Run `npm run lint` and `npm run build` to confirm zero warnings, zero errors, and strict compilation compliance.
 
 ---
 
 ### Step 7 — Environment Variables (`.env.example`)
 
-- [ ] Ensure `.env.example` explicitly lists all necessary environment variables:
+- [x] Ensure `.env.example` explicitly lists all necessary environment variables:
   ```ini
   # MongoDB Atlas connection string (or local mongodb://localhost:27017/rvsp)
   MONGODB_URI=
@@ -128,16 +128,16 @@ _No dependencies — this memory can be started immediately as the highest devel
 
 ### Step 8 — Docs & Status Update
 
-- [ ] Mark Phase 1 tasks (`[x] Define Gift schema`, `[x] Define Rsvp schema`, `[x] Build lib/mongodb.ts`, etc.) as completed in `docs/project-status/project-status.md`.
-- [ ] Update `status` to `🟢 Done` and add `completed: YYYY-MM-DD` once all above steps pass cleanly.
+- [x] Mark Phase 1 tasks (`[x] Define Gift schema`, `[x] Define Rsvp schema`, `[x] Build lib/mongodb.ts`, etc.) as completed in `docs/project-status/project-status.md`.
+- [x] Update `status` to `🟢 Done` and add `completed: YYYY-MM-DD` once all above steps pass cleanly.
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] `npm run lint` passes with 0 errors and 0 warnings.
-- [ ] `npm run build` passes with no TypeScript errors.
-- [ ] No `console.log` debugging statements or `any` types in newly added code.
-- [ ] `PATCH /api/v1/gifts/[id]/reserve` uses `findOneAndUpdate` with `{ status: "available" }` filter; never read-then-write across two calls.
-- [ ] All API handlers validate request inputs with Zod schemas defined in `src/lib/validators.ts`.
-- [ ] Concurrency test proves that two simultaneous reservation attempts for the same gift result in exactly 1 success and 1 conflict failure.
+- [x] `npm run lint` passes with 0 errors and 0 warnings.
+- [x] `npm run build` passes with no TypeScript errors.
+- [x] No `console.log` debugging statements or `any` types in newly added code.
+- [x] `PATCH /api/v1/gifts/[id]/reserve` uses `findOneAndUpdate` with `{ status: "available" }` filter; never read-then-write across two calls.
+- [x] All API handlers validate request inputs with Zod schemas defined in `src/lib/validators.ts`.
+- [x] Concurrency test proves that two simultaneous reservation attempts for the same gift result in exactly 1 success and 1 conflict failure.

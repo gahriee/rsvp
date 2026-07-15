@@ -56,3 +56,14 @@ export async function reserveGift(
   }
   return result.data;
 }
+
+export async function fetchRsvpById(id: string): Promise<Rsvp> {
+  const response = await fetch(`${BASE_URL}/rsvp/${id}`, {
+    cache: "no-store",
+  });
+  const result: ApiResponse<Rsvp> = await response.json();
+  if (!response.ok || !result.success || !result.data) {
+    throw new Error(result.error || "Failed to fetch RSVP details");
+  }
+  return result.data;
+}

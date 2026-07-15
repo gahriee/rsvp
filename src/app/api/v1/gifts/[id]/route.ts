@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/mongodb";
 import {
   getGiftById,
   updateGift,
   deleteGift,
-} from "../../../../../lib/services/giftService";
-import { updateGiftSchema } from "../../../../../lib/validators";
-import { isAdminAuthenticated } from "../../../../../lib/auth";
+} from "@/lib/services/giftService";
+import { updateGiftSchema } from "@/lib/validators";
+import { isAdminAuthenticated } from "@/lib/auth";
 import { z } from "zod";
 
 interface RouteParams {

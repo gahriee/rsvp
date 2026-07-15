@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../lib/mongodb";
-import { getAllRsvps, createRsvp } from "../../../../lib/services/rsvpService";
-import { createRsvpSchema } from "../../../../lib/validators";
-import { isAdminAuthenticated } from "../../../../lib/auth";
-import { GiftUnavailableError } from "../../../../lib/types";
+import { connectToDatabase } from "@/lib/mongodb";
+import { getAllRsvps, createRsvp } from "@/lib/services/rsvpService";
+import { createRsvpSchema } from "@/lib/validators";
+import { isAdminAuthenticated } from "@/lib/auth";
+import { GiftUnavailableError } from "@/lib/types";
 import { z } from "zod";
 
 export async function GET() {

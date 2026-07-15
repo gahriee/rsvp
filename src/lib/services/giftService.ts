@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import { connectToDatabase } from "../mongodb";
-import { Gift as GiftModel } from "../../models/Gift";
-import { Rsvp as RsvpModel } from "../../models/Rsvp";
+import { connectToDatabase } from "@/lib/mongodb";
+import { Gift as GiftModel } from "@/models/Gift";
+import { Rsvp as RsvpModel } from "@/models/Rsvp";
 import {
   Gift,
   CreateGiftInput,
   UpdateGiftInput,
   GiftUnavailableError,
-} from "../types";
+} from "@/lib/types";
 
 interface RawGiftDoc {
   _id: mongoose.Types.ObjectId | string;

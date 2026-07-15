@@ -43,15 +43,15 @@
 
 ## Phase 2 — Frontend Pages (Guest-Facing)
 
-- [ ] Landing / Invitation page (`/`) — hero, event details, countdown, CTA
-- [ ] RSVP form page (`/rsvp`) — name, email, attending, guest count, message
-- [ ] Gift registry page (`/gifts`) — grid of gift cards, select available gift
-- [ ] Confirmation page (`/confirmation`) — summary of RSVP + chosen gift
-- [ ] Responsive design pass (mobile, tablet, desktop)
-- [ ] Loading & error states for form submissions
-- [ ] "Gift already taken" real-time handling (refetch/disable on conflict)
+- [x] Landing / Invitation page (`/`) — hero, event details, countdown, CTA
+- [x] RSVP form page (`/rsvp`) — name, email, attending, guest count, message
+- [x] Gift registry page (`/gifts`) — grid of gift cards, select available gift
+- [x] Confirmation page (`/confirmation`) — summary of RSVP + chosen gift
+- [x] Responsive design pass (mobile, tablet, desktop)
+- [x] Loading & error states for form submissions
+- [x] "Gift already taken" real-time handling (refetch/disable on conflict)
 
-**Phase 2 target completion:** **\_\_**
+**Phase 2 target completion:** **Completed (2026-07-16)**
 
 ---
 
@@ -110,7 +110,7 @@
 | ---------------------- | ----------- | ---------- |
 | 0 — Planning & Setup   | Done        | 100%       |
 | 1 — Database & Backend | Done        | 100%       |
-| 2 — Frontend Pages     | Not started | 0%         |
+| 2 — Frontend Pages     | Done        | 100%       |
 | 3 — Admin Dashboard    | Not started | 0%         |
 | 4 — Polish & Extras    | Not started | 0%         |
 | 5 — Testing & QA       | Not started | 0%         |

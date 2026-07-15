@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import { connectToDatabase } from "../mongodb";
-import { Rsvp as RsvpModel } from "../../models/Rsvp";
-import { Gift as GiftModel } from "../../models/Gift";
+import { connectToDatabase } from "@/lib/mongodb";
+import { Rsvp as RsvpModel } from "@/models/Rsvp";
+import { Gift as GiftModel } from "@/models/Gift";
 import { reserveGiftAtomically } from "./giftService";
 import {
   Rsvp,
   CreateRsvpInput,
   UpdateRsvpInput,
-} from "../types";
+} from "@/lib/types";
 
 interface RawRsvpDoc {
   _id: mongoose.Types.ObjectId | string;
