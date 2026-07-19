@@ -36,7 +36,7 @@ export default function HomePage() {
           <RegistryAndRsvpSection />
         </Suspense>
       </div>
-      <MusicPlayer url="https://www.youtube.com/watch?v=4M9K0i2TCb0" />
+      <MusicPlayer url="/Long%20Live%20%20Taylor%20Swift.mp3" />
     </EnvelopeGate>
   );
 }

@@ -46,39 +46,7 @@ export function GiftManager({ initialGifts, rsvpMap }: GiftManagerProps) {
     }
   };
 
-  const handleToggleStatus = async (gift: Gift) => {
-    try {
-      setIsProcessingId(gift._id);
 
-      const newStatus = gift.status === "available" ? "reserved" : "available";
-      const payload: Record<string, unknown> = { status: newStatus };
-      if (newStatus === "available") {
-        payload.reservedBy = [];
-      }
-
-      const res = await fetch(`/api/v1/gifts/${gift._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        toast.error(data.error || "Failed to toggle status");
-        setIsProcessingId(null);
-        return;
-      }
-
-      setGifts((prev) =>
-        prev.map((g) => (g._id === gift._id ? data.data : g))
-      );
-      toast.success(`Marked "${gift.name}" as ${newStatus}.`);
-    } catch {
-      toast.error("Network error toggling gift status");
-    } finally {
-      setIsProcessingId(null);
-    }
-  };
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return;
@@ -201,7 +169,6 @@ export function GiftManager({ initialGifts, rsvpMap }: GiftManagerProps) {
         gifts={filteredGifts}
         onEdit={handleOpenEdit}
         onViewClaimers={(gift) => setViewClaimersGift(gift)}
-        onToggleStatus={handleToggleStatus}
         onDelete={(gift) => setDeleteTarget(gift)}
         isProcessingId={isProcessingId}
       />

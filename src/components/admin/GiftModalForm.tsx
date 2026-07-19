@@ -25,9 +25,7 @@ export function GiftModalForm({
   const [imageUrl, setImageUrl] = useState(giftToEdit?.imageUrl || "");
   const [productLink, setProductLink] = useState(giftToEdit?.productLink || "");
   const [maxReservations, setMaxReservations] = useState(giftToEdit?.maxReservations || 3);
-  const [status, setStatus] = useState<"available" | "reserved">(
-    giftToEdit?.status || "available"
-  );
+  const status = giftToEdit?.status || "available";
   const [isSaving, setIsSaving] = useState(false);
 
   if (!isOpen) return null;
@@ -57,9 +55,7 @@ export function GiftModalForm({
         status,
       };
 
-      if (status === "available") {
-        payload.reservedBy = [];
-      }
+
 
       const res = await fetch(url, {
         method,
@@ -181,21 +177,7 @@ export function GiftModalForm({
 
           {giftToEdit && (
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
-                  Availability Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) =>
-                    setStatus(e.target.value as "available" | "reserved")
-                  }
-                  className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
-                >
-                  <option value="available">Available (Unclaimed)</option>
-                  <option value="reserved">Reserved (Claimed)</option>
-                </select>
-              </div>
+
 
               {giftToEdit.reservedBy && giftToEdit.reservedBy.length > 0 && (
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">

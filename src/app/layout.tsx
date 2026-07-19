@@ -43,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} scroll-smooth overflow-x-hidden`}>
       <body className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-pink-100/40 to-pink-100/60 text-slate-800 font-sans selection:bg-pink-400 selection:text-white relative overflow-x-hidden">
         {/* Decorative background blur orbs */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

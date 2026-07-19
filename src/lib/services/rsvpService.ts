@@ -82,7 +82,8 @@ export async function createRsvp(data: CreateRsvpInput): Promise<Rsvp> {
       return formatRsvpDoc(newRsvp.toObject() as RawRsvpDoc);
     } catch (error) {
       await GiftModel.findByIdAndUpdate(data.selectedGift, {
-        $set: { status: "available", reservedBy: null },
+        $pull: { reservedBy: rsvpId },
+        $set: { status: "available" }
       });
       throw error;
     }
@@ -118,7 +119,8 @@ export async function updateRsvp(
   if (data.selectedGift !== undefined && newGiftId !== currentGiftId) {
     if (currentGiftId) {
       await GiftModel.findByIdAndUpdate(currentGiftId, {
-        $set: { status: "available", reservedBy: null },
+        $pull: { reservedBy: new mongoose.Types.ObjectId(id) },
+        $set: { status: "available" }
       });
     }
     if (newGiftId) {
@@ -162,7 +164,8 @@ export async function deleteRsvp(id: string): Promise<boolean> {
 
   if (current.selectedGift) {
     await GiftModel.findByIdAndUpdate(current.selectedGift, {
-      $set: { status: "available", reservedBy: null },
+      $pull: { reservedBy: new mongoose.Types.ObjectId(id) },
+      $set: { status: "available" }
     });
   }
 

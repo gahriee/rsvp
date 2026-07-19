@@ -7,7 +7,6 @@ interface GiftTableProps {
   gifts: Gift[];
   onEdit: (gift: Gift) => void;
   onViewClaimers: (gift: Gift) => void;
-  onToggleStatus: (gift: Gift) => void;
   onDelete: (gift: Gift) => void;
   isProcessingId: string | null;
 }
@@ -16,7 +15,6 @@ export function GiftTable({
   gifts,
   onEdit,
   onViewClaimers,
-  onToggleStatus,
   onDelete,
   isProcessingId,
 }: GiftTableProps) {
@@ -87,18 +85,15 @@ export function GiftTable({
                     {gift.description}
                   </td>
                   <td className="py-4 px-6 text-center">
-                    <button
-                      onClick={() => onToggleStatus(gift)}
-                      disabled={isProcessing}
-                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold font-serif transition-all border shadow-sm disabled:opacity-50 ${
+                    <span
+                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold font-serif border shadow-sm ${
                         isReserved
-                          ? "bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100"
-                          : "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
+                          ? "bg-purple-50 text-purple-600 border-purple-200"
+                          : "bg-emerald-50 text-emerald-600 border-emerald-200"
                       }`}
-                      title="Click to toggle availability status"
                     >
                       {isReserved ? "Fully Reserved" : `Available (${gift.maxReservations - (gift.reservedBy?.length || 0)}/${gift.maxReservations})`}
-                    </button>
+                    </span>
                   </td>
                   <td className="py-4 px-6 text-slate-500">
                     {gift.reservedBy && gift.reservedBy.length > 0 ? (

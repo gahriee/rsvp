@@ -1,0 +1,7 @@
+fix(web): prevent iOS scroll and automate gift status
+
+- Automate gift status based on maxReservations, removing manual toggles from admin UI.
+- Fix RSVP service data overwrite by using $pull when unreserving a gift.
+- Apply overflow-x-hidden to html tag to lock iOS horizontal scrolling.
+- Simplify MusicPlayer to a Play/Pause FAB, utilizing native interactions to bypass Safari autoplay blocks.
+- Switch default background music to the provided local MP3 track.
