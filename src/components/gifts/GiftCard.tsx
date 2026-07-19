@@ -61,10 +61,10 @@ export function GiftCard({
       )}
 
       {!isReserved && (
-        <div className="absolute top-4 right-4 z-20 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-pink-700 shadow-sm border border-pink-200/60 flex items-center gap-1.5 group-hover:scale-105 transition-transform">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Available ({gift.reservedBy?.length || 0}/{gift.maxReservations})</span>
-          <Sparkles className="h-3 w-3 text-pink-500" />
+        <div className="absolute top-4 right-4 z-20 rounded-full bg-emerald-50/95 backdrop-blur-md px-3 py-1 text-xs font-bold text-emerald-700 shadow-sm border border-emerald-200 flex items-center gap-1.5 group-hover:scale-105 transition-transform">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Available ({gift.maxReservations - (gift.reservedBy?.length || 0)}/{gift.maxReservations})</span>
+          <Sparkles className="h-3 w-3 text-emerald-500" />
         </div>
       )}
 
@@ -86,18 +86,20 @@ export function GiftCard({
           <h3 className="font-serif text-xl font-bold text-slate-900 tracking-tight group-hover:text-pink-500 transition-colors">
             {gift.name}
           </h3>
-          <p className="mt-1.5 text-sm text-slate-600 line-clamp-2 leading-relaxed">
-            {gift.description}
-          </p>
+          {gift.description && (
+            <p className="mt-1.5 text-sm text-slate-600 line-clamp-2 leading-relaxed">
+              {gift.description}
+            </p>
+          )}
 
           {gift.productLink && (
             <a
               href={gift.productLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 hover:text-pink-700 transition-colors bg-pink-50/50 hover:bg-pink-100 rounded-lg px-2.5 py-1.5 border border-pink-100"
+              className="mt-3 flex w-full justify-center items-center gap-1.5 text-sm font-bold text-pink-600 hover:text-pink-700 transition-colors bg-pink-50 hover:bg-pink-100 rounded-lg px-3 py-2 border border-pink-200 shadow-sm"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-4 h-4" />
               <span>Buy Here</span>
             </a>
           )}

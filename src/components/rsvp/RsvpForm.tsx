@@ -11,9 +11,10 @@ import { fetchGiftById } from "@/lib/apiClient";
 interface RsvpFormProps {
   onSubmit: (data: CreateRsvpInput) => Promise<void> | void;
   selectedGiftId?: string | null;
+  onClearGift?: () => void;
 }
 
-export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
+export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpFormProps) {
   const [guestName, setGuestName] = useState("");
   const [email, setEmail] = useState("");
   const [attending, setAttending] = useState(true);
@@ -333,6 +334,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
                   setFetchedGift(null);
                   setErrorGiftId(null);
                   setGiftErrorMessage(null);
+                  onClearGift?.();
                 }}
                 className="rounded-full bg-white border border-pink-200 px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-pink-100 hover:text-pink-900 transition-all shadow-sm"
               >
@@ -375,9 +377,11 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
               <p className="text-base font-serif font-bold text-slate-900 truncate">
                 {giftPreview.name}
               </p>
-              <p className="text-xs text-slate-500 line-clamp-1">
-                {giftPreview.description}
-              </p>
+              {giftPreview.description && (
+                <p className="text-xs text-slate-500 line-clamp-1">
+                  {giftPreview.description}
+                </p>
+              )}
             </div>
             <span
               className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${

@@ -9,17 +9,19 @@ import toast from "react-hot-toast";
 
 interface GiftManagerProps {
   initialGifts: Gift[];
+  rsvpMap: Record<string, string>;
 }
 
 type FilterStatus = "all" | "available" | "reserved";
 
-export function GiftManager({ initialGifts }: GiftManagerProps) {
+export function GiftManager({ initialGifts, rsvpMap }: GiftManagerProps) {
   const [gifts, setGifts] = useState<Gift[]>(initialGifts);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [giftToEdit, setGiftToEdit] = useState<Gift | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Gift | null>(null);
+  const [viewClaimersGift, setViewClaimersGift] = useState<Gift | null>(null);
   const [isProcessingId, setIsProcessingId] = useState<string | null>(null);
 
   const handleOpenCreate = () => {
@@ -109,7 +111,7 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
   const filteredGifts = gifts.filter((gift) => {
     const matchesQuery =
       gift.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      gift.description.toLowerCase().includes(searchQuery.toLowerCase());
+      gift.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (!matchesQuery) return false;
 
@@ -134,7 +136,7 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm shadow-md transition-colors duration-300 self-start sm:self-auto"
+          className="cursor-pointer inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm shadow-md transition-colors duration-300 self-start sm:self-auto"
         >
           <Plus className="w-5 h-5" />
           <span>Add Gift Item</span>
@@ -198,6 +200,7 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
       <GiftTable
         gifts={filteredGifts}
         onEdit={handleOpenEdit}
+        onViewClaimers={(gift) => setViewClaimersGift(gift)}
         onToggleStatus={handleToggleStatus}
         onDelete={(gift) => setDeleteTarget(gift)}
         isProcessingId={isProcessingId}
@@ -209,7 +212,55 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleModalSuccess}
         giftToEdit={giftToEdit}
+        rsvpMap={rsvpMap}
       />
+
+      {/* View Claimers Modal */}
+      {viewClaimersGift && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm w-full max-w-md p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative space-y-4">
+             {/* Washi Tape */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-32 h-8 bg-gradient-to-r from-pink-200/90 to-rose-200/90 backdrop-blur-md transform -rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-pink-800 uppercase tracking-widest">
+              Claimers
+            </div>
+            
+            <h3 className="text-xl font-serif font-extrabold text-slate-900 text-center mt-2">
+              Who Claimed This?
+            </h3>
+            <div className="flex justify-center mb-2">
+              <span className="bg-pink-50 text-pink-700 px-3 py-1 rounded-full text-xs font-bold font-serif border border-pink-100">
+                {viewClaimersGift.name}
+              </span>
+            </div>
+            
+            <div className="bg-white border border-pink-100 rounded-xl p-4 max-h-64 overflow-y-auto mt-4 shadow-inner">
+              {viewClaimersGift.reservedBy && viewClaimersGift.reservedBy.length > 0 ? (
+                <ul className="space-y-2">
+                  {viewClaimersGift.reservedBy.map((rsvpId) => (
+                    <li key={rsvpId} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-100">
+                      <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
+                      <span className="text-sm font-medium text-slate-700">
+                        {rsvpMap[rsvpId] || "Unknown Guest"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-center text-sm text-slate-500 italic font-serif">No one has claimed this gift yet.</p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-center pt-4 border-t border-pink-100">
+              <button
+                onClick={() => setViewClaimersGift(null)}
+                className="px-6 py-2.5 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-bold font-serif text-sm transition-colors duration-300 shadow-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (

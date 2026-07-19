@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { Gift } from "@/lib/types";
-import { Edit2, Trash2, ExternalLink } from "lucide-react";
+import { Edit2, Trash2, ExternalLink, Eye } from "lucide-react";
 
 interface GiftTableProps {
   gifts: Gift[];
   onEdit: (gift: Gift) => void;
+  onViewClaimers: (gift: Gift) => void;
   onToggleStatus: (gift: Gift) => void;
   onDelete: (gift: Gift) => void;
   isProcessingId: string | null;
@@ -14,6 +15,7 @@ interface GiftTableProps {
 export function GiftTable({
   gifts,
   onEdit,
+  onViewClaimers,
   onToggleStatus,
   onDelete,
   isProcessingId,
@@ -95,7 +97,7 @@ export function GiftTable({
                       }`}
                       title="Click to toggle availability status"
                     >
-                      {isReserved ? "Fully Reserved" : `Available (${gift.reservedBy?.length || 0}/${gift.maxReservations})`}
+                      {isReserved ? "Fully Reserved" : `Available (${gift.maxReservations - (gift.reservedBy?.length || 0)}/${gift.maxReservations})`}
                     </button>
                   </td>
                   <td className="py-4 px-6 text-slate-500">
@@ -108,6 +110,16 @@ export function GiftTable({
                     )}
                   </td>
                   <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
+                    {gift.reservedBy && gift.reservedBy.length > 0 && (
+                      <button
+                        onClick={() => onViewClaimers(gift)}
+                        disabled={isProcessing}
+                        className="inline-flex items-center justify-center p-2 rounded-xl bg-slate-50 hover:bg-pink-100 text-pink-600 transition-colors duration-300 border border-slate-200 disabled:opacity-50 shadow-sm"
+                        title="View Claimers"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    )}
                     <button
                       onClick={() => onEdit(gift)}
                       disabled={isProcessing}

@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 export interface IGiftDocument extends Document {
   name: string;
-  description: string;
+  description?: string;
   imageUrl: string;
   productLink?: string;
   status: "available" | "reserved";
@@ -15,7 +15,7 @@ export interface IGiftDocument extends Document {
 const giftSchema = new Schema<IGiftDocument>(
   {
     name: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     imageUrl: { type: String, required: true },
     productLink: { type: String, required: false },
     status: {

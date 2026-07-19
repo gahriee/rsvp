@@ -26,7 +26,7 @@ export type GiftStatus = "available" | "reserved";
 export interface Gift {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
   imageUrl: string;
   productLink?: string;
   status: GiftStatus;

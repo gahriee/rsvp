@@ -60,6 +60,11 @@ export async function getRsvpById(id: string): Promise<Rsvp | null> {
 export async function createRsvp(data: CreateRsvpInput): Promise<Rsvp> {
   await connectToDatabase();
 
+  const existingRsvp = await RsvpModel.findOne({ email: data.email });
+  if (existingRsvp) {
+    throw new Error("An RSVP with this email has already been submitted.");
+  }
+
   if (data.selectedGift) {
     const rsvpId = new mongoose.Types.ObjectId();
     await reserveGiftAtomically(data.selectedGift, rsvpId.toString());

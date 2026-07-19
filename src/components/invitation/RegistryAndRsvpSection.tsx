@@ -84,8 +84,15 @@ export function RegistryAndRsvpSection() {
     }
 
     // Otherwise, normal pre-RSVP flow: set selected gift and scroll to RSVP form
-    setSelectedGiftId((prev) => (prev === giftId ? null : giftId));
-    document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" });
+    setSelectedGiftId((prev) => {
+      const isSelectingNew = prev !== giftId;
+      if (isSelectingNew) {
+        setTimeout(() => {
+          document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
+      }
+      return isSelectingNew ? giftId : null;
+    });
   };
 
   const handleRsvpSubmit = async (data: CreateRsvpInput) => {
@@ -98,13 +105,16 @@ export function RegistryAndRsvpSection() {
       if (foundGift) {
         setConfirmationGift(foundGift);
       }
+      
+      // Refresh gifts so the available count updates in the grid
+      void refreshGifts();
     } else {
       setConfirmationGift(null);
     }
 
     // Scroll cleanly to top of confirmation card
     setTimeout(() => {
-      document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
@@ -226,7 +236,11 @@ export function RegistryAndRsvpSection() {
             </FadeSlideImage>
 
             {/* RSVP Form Component */}
-            <RsvpForm onSubmit={handleRsvpSubmit} selectedGiftId={selectedGiftId} />
+            <RsvpForm 
+              onSubmit={handleRsvpSubmit} 
+              selectedGiftId={selectedGiftId} 
+              onClearGift={() => setSelectedGiftId(null)}
+            />
           </div>
         )}
       </section>

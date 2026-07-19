@@ -2,6 +2,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { getAllGifts } from "@/lib/services/giftService";
+import { getAllRsvps } from "@/lib/services/rsvpService";
 import { GiftManager } from "@/components/admin/GiftManager";
 import type { Metadata } from "next";
 
@@ -15,7 +16,15 @@ export default async function AdminGiftsPage() {
     redirect("/admin/login");
   }
 
-  const gifts = await getAllGifts();
+  const [gifts, rsvps] = await Promise.all([
+    getAllGifts(),
+    getAllRsvps(),
+  ]);
 
-  return <GiftManager initialGifts={gifts} />;
+  const rsvpMap: Record<string, string> = {};
+  rsvps.forEach((rsvp) => {
+    rsvpMap[rsvp._id] = rsvp.guestName;
+  });
+
+  return <GiftManager initialGifts={gifts} rsvpMap={rsvpMap} />;
 }

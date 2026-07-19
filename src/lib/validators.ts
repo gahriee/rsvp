@@ -13,7 +13,7 @@ export const updateRsvpSchema = createRsvpSchema.partial();
 
 export const createGiftSchema = z.object({
   name: z.string().min(1, "Gift name is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional().or(z.literal("")),
   imageUrl: z.string().min(1, "Image is required"),
   productLink: z.string().url().optional().or(z.literal("")),
   status: z.enum(["available", "reserved"]).optional().default("available"),

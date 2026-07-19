@@ -14,12 +14,15 @@ export async function sendRsvpConfirmationEmail(
     const fromEmail = process.env.SMTP_FROM || process.env.FROM_EMAIL || "celebration@graduate.com";
 
     let giftName: string | null = null;
+    let giftLink: string | null = null;
     if (rsvp.selectedGift) {
       try {
         await connectToDatabase();
         const giftDoc = await Gift.findById(rsvp.selectedGift).lean();
         if (giftDoc) {
-          giftName = (giftDoc as unknown as GiftInterface).name;
+          const typedGift = giftDoc as unknown as GiftInterface;
+          giftName = typedGift.name;
+          giftLink = typedGift.productLink || null;
         }
       } catch (err) {
         console.error("Failed to fetch gift details for confirmation email:", err);
@@ -27,18 +30,56 @@ export async function sendRsvpConfirmationEmail(
     }
 
     const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
-        <h1 style="color: #4a5568; text-align: center;">Graduation Celebration RSVP</h1>
-        <p>Hi ${rsvp.guestName},</p>
-        <p>Thank you for submitting your RSVP for the graduation celebration!</p>
-        <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
-          <h3 style="margin-top: 0; color: #2d3748;">Your RSVP Details:</h3>
-          <p><strong>Status:</strong> ${rsvp.attending ? "Attending 🎉" : "Not Attending"}</p>
-          ${rsvp.attending ? `<p><strong>Guests Attending:</strong> ${rsvp.numberOfGuests}</p>` : ""}
-          ${giftName ? `<p><strong>Selected Gift:</strong> ${giftName}</p>` : ""}
-          ${rsvp.message ? `<p><strong>Your Message:</strong> "${rsvp.message}"</p>` : ""}
+      <div style="background-color: #fdf2f8; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #fffcf9; border: 2px solid #fce7f3; border-radius: 12px; padding: 30px; position: relative; color: #334155; box-shadow: 0 8px 30px rgba(0,0,0,0.04);">
+          
+          <!-- Simulated Washi Tape -->
+          <div style="width: 120px; height: 28px; background-color: #fbcfe8; margin: -44px auto 20px; border-radius: 2px; opacity: 0.9; text-align: center; line-height: 28px; font-size: 10px; font-weight: bold; color: #831843; text-transform: uppercase; letter-spacing: 2px;">
+            RSVP
+          </div>
+          
+          <h1 style="color: #831843; text-align: center; font-family: Georgia, serif; font-size: 28px; margin-top: 10px; margin-bottom: 24px;">
+            ${rsvp.attending ? "We're so excited!" : "Thank you for letting us know"}
+          </h1>
+          
+          <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 16px;">
+            Hi <strong>${rsvp.guestName}</strong>,
+          </p>
+          
+          <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 24px;">
+            Thank you for submitting your RSVP for my graduation celebration. Your response has been safely recorded in my scrapbook!
+          </p>
+          
+          <div style="background-color: #ffffff; padding: 24px; border-radius: 12px; margin: 25px 0; border: 2px dashed #fbcfe8;">
+            <h3 style="margin-top: 0; color: #be185d; font-family: Georgia, serif; font-size: 18px; margin-bottom: 16px;">Your Details:</h3>
+            
+            <p style="margin: 10px 0; font-size: 15px;">
+              <strong style="color: #831843;">Status:</strong> ${rsvp.attending ? "Attending 🎉" : "Not Attending"}
+            </p>
+            
+            ${rsvp.attending ? `
+            <p style="margin: 10px 0; font-size: 15px;">
+              <strong style="color: #831843;">Guests Attending:</strong> ${rsvp.numberOfGuests}
+            </p>` : ""}
+            
+            ${giftName ? `
+            <div style="margin: 10px 0; font-size: 15px;">
+              <strong style="color: #831843;">Selected Gift:</strong> ${giftName}
+              ${giftLink ? `<br/><a href="${giftLink}" style="display: inline-block; margin-top: 6px; padding: 6px 12px; background-color: #fbcfe8; color: #831843; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">View Item Details</a>` : ""}
+            </div>` : ""}
+            
+            ${rsvp.message ? `
+            <p style="margin: 10px 0; font-size: 15px;">
+              <strong style="color: #831843;">Your Message:</strong><br/>
+              <span style="font-style: italic; color: #64748b; display: inline-block; margin-top: 6px; padding-left: 10px; border-left: 3px solid #fbcfe8;">"${rsvp.message}"</span>
+            </p>` : ""}
+          </div>
+          
+          <p style="font-size: 16px; color: #ec4899; text-align: center; font-family: Georgia, serif; font-weight: bold; margin-top: 32px; margin-bottom: 0;">
+            ${rsvp.attending ? "Can't wait to celebrate with you!" : "You'll be missed!"}
+          </p>
+          
         </div>
-        <p style="font-size: 14px; color: #718096; text-align: center;">We look forward to celebrating with you!</p>
       </div>
     `.trim();
 

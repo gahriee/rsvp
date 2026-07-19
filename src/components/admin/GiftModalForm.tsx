@@ -10,6 +10,7 @@ interface GiftModalFormProps {
   onClose: () => void;
   onSuccess: (savedGift: Gift, isNew: boolean) => void;
   giftToEdit: Gift | null;
+  rsvpMap: Record<string, string>;
 }
 
 export function GiftModalForm({
@@ -17,6 +18,7 @@ export function GiftModalForm({
   onClose,
   onSuccess,
   giftToEdit,
+  rsvpMap,
 }: GiftModalFormProps) {
   const [name, setName] = useState(giftToEdit?.name || "");
   const [description, setDescription] = useState(giftToEdit?.description || "");
@@ -32,8 +34,8 @@ export function GiftModalForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !description.trim() || !imageUrl.trim()) {
-      toast.error("Please fill in all fields.");
+    if (!name.trim() || !imageUrl.trim()) {
+      toast.error("Please fill in all required fields (Name and Image).");
       return;
     }
 
@@ -135,7 +137,7 @@ export function GiftModalForm({
 
           <div>
             <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
-              Description
+              Description (Optional)
             </label>
             <textarea
               rows={3}
@@ -143,7 +145,6 @@ export function GiftModalForm({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Provide details about the gift item..."
               className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm resize-none"
-              required
             />
           </div>
 
@@ -179,20 +180,37 @@ export function GiftModalForm({
           </div>
 
           {giftToEdit && (
-            <div>
-              <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
-                Availability Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) =>
-                  setStatus(e.target.value as "available" | "reserved")
-                }
-                className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
-              >
-                <option value="available">Available (Unclaimed)</option>
-                <option value="reserved">Reserved (Claimed)</option>
-              </select>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
+                  Availability Status
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) =>
+                    setStatus(e.target.value as "available" | "reserved")
+                  }
+                  className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
+                >
+                  <option value="available">Available (Unclaimed)</option>
+                  <option value="reserved">Reserved (Claimed)</option>
+                </select>
+              </div>
+
+              {giftToEdit.reservedBy && giftToEdit.reservedBy.length > 0 && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <label className="block text-xs font-serif font-bold text-slate-700 mb-2 uppercase tracking-wider">
+                    Claimed By ({giftToEdit.reservedBy.length})
+                  </label>
+                  <div className="flex flex-col gap-1.5">
+                    {giftToEdit.reservedBy.map((rsvpId) => (
+                      <div key={rsvpId} className="text-sm text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-md shadow-sm">
+                        {rsvpMap[rsvpId] || "Unknown Guest"}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

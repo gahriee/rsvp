@@ -32,7 +32,7 @@ export function GiftGrid({
     const matchesSearch =
       searchQuery === "" ||
       gift.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      gift.description.toLowerCase().includes(searchQuery.toLowerCase());
+      gift.description?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 

@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { PartyPopper, Heart, Sparkles, Calendar, Clock, MapPin, Gift as GiftIcon, Ticket, Check, XCircle, Mail, ExternalLink } from "lucide-react";
+
+import { PartyPopper, Heart, Sparkles, Calendar, Clock, MapPin, Gift as GiftIcon, Ticket, Check, XCircle, ExternalLink } from "lucide-react";
 import { Rsvp, Gift } from "@/lib/types";
 import { EVENT_DETAILS } from "@/lib/constants/eventDetails";
 
@@ -38,7 +38,6 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
         </div>
         <h1 className="text-4xl sm:text-6xl font-serif font-bold tracking-tight text-slate-900 flex items-center justify-center gap-3">
           <span>Officially RSVP&apos;d!</span>
-          <Mail className="h-8 w-8 text-pink-500" />
         </h1>
         <p className="mt-3 text-lg sm:text-xl font-serif italic text-pink-600 flex items-center justify-center gap-1.5 flex-wrap">
           <span>We are overjoyed to celebrate with you,</span>
@@ -68,13 +67,11 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
                 <p className="text-lg font-serif font-bold text-slate-900 flex items-center gap-2 mt-0.5">
                   {rsvp.attending ? (
                     <>
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span>Joyfully Attending</span>
                       <Check className="h-4 w-4 text-emerald-600" />
                     </>
                   ) : (
                     <>
-                      <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
                       <span>Regretfully Declining</span>
                       <XCircle className="h-4 w-4 text-slate-400" />
                     </>
@@ -136,9 +133,11 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
                   <h4 className="font-serif text-base font-bold text-slate-900 truncate">
                     {gift.name}
                   </h4>
-                  <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">
-                    {gift.description}
-                  </p>
+                  {gift.description && (
+                    <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">
+                      {gift.description}
+                    </p>
+                  )}
                   {gift.productLink && (
                     <a
                       href={gift.productLink}
@@ -171,15 +170,7 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
             )}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-pink-200/60">
-            <Link
-              href="/#wishlist"
-              className="flex items-center justify-center gap-1.5 w-full text-center rounded-full bg-white border border-pink-300 px-4 py-2 text-xs font-bold text-pink-800 hover:bg-pink-100 transition-all shadow-sm"
-            >
-              <span>{gift ? "Browse / Change Gift Selection" : "Browse Registry & Attach Gift"}</span>
-              <GiftIcon className="h-3.5 w-3.5 text-pink-600" />
-            </Link>
-          </div>
+
         </div>
       </div>
 

@@ -1,18 +1,20 @@
 import React from "react";
 import { Rsvp } from "@/lib/types";
-import { Edit2, Trash2 } from "lucide-react";
+import { Trash2, Eye } from "lucide-react";
 
 interface RsvpTableProps {
   rsvps: Rsvp[];
-  onEdit: (rsvp: Rsvp) => void;
+
   onDelete: (rsvp: Rsvp) => void;
+  onViewMessage: (rsvp: Rsvp) => void;
   isDeletingId: string | null;
 }
 
 export function RsvpTable({
   rsvps,
-  onEdit,
+
   onDelete,
+  onViewMessage,
   isDeletingId,
 }: RsvpTableProps) {
   if (rsvps.length === 0) {
@@ -72,14 +74,16 @@ export function RsvpTable({
                     )}
                   </td>
                   <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
-                    <button
-                      onClick={() => onEdit(rsvp)}
-                      disabled={isDeleting}
-                      className="inline-flex items-center justify-center p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors duration-300 border border-slate-200 disabled:opacity-50 shadow-sm"
-                      title="Edit RSVP"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
+                    {rsvp.message && (
+                      <button
+                        onClick={() => onViewMessage(rsvp)}
+                        disabled={isDeleting}
+                        className="inline-flex items-center justify-center p-2 rounded-xl bg-slate-50 hover:bg-pink-100 text-pink-600 transition-colors duration-300 border border-slate-200 disabled:opacity-50 shadow-sm"
+                        title="View Message"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    )}
                     <button
                       onClick={() => onDelete(rsvp)}
                       disabled={isDeleting}
