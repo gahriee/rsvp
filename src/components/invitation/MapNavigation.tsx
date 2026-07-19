@@ -187,7 +187,7 @@ export function MapNavigation() {
                 href={navigation.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 px-6 py-4 text-center text-sm font-extrabold text-white shadow-xl shadow-pink-300/50 hover:from-pink-600 hover:to-rose-600 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                className="w-full rounded-full bg-pink-500 px-6 py-3.5 text-center text-sm font-bold text-white shadow-md hover:bg-pink-600 transition-all flex items-center justify-center gap-2"
               >
                 <span>Get Directions on Google Maps</span>
                 <Compass className="h-4 w-4" />
@@ -196,7 +196,7 @@ export function MapNavigation() {
                 href={navigation.appleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full rounded-full bg-white border-2 border-pink-300 px-6 py-4 text-center text-sm font-extrabold text-slate-800 hover:bg-pink-50 hover:border-pink-400 transition-all flex items-center justify-center gap-2 shadow-md"
+                className="w-full rounded-full bg-white border-2 border-pink-300 px-6 py-3.5 text-center text-sm font-bold text-slate-800 hover:bg-pink-50 hover:border-pink-400 transition-all flex items-center justify-center gap-2 shadow-md"
               >
                 <span>Open in Apple Maps</span>
                 <Navigation className="h-4 w-4 text-pink-600" />

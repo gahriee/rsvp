@@ -433,10 +433,10 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
         disabled={
           loading || (giftPreview ? giftPreview.status === "reserved" : false)
         }
-        className="w-full rounded-2xl bg-gradient-to-r from-pink-400 via-pink-500 to-rose-400 px-8 py-4 font-serif text-lg font-bold text-white shadow-xl shadow-pink-300/60 transition-all hover:from-pink-500 hover:to-rose-500 hover:scale-[1.01] hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+        className="cursor-pointer w-full rounded-full bg-pink-500 px-8 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-pink-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-pink-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         <span>{loading ? "Sending..." : "Submit"}</span>
-        {!loading && <Sparkles className="h-5 w-5" />}
+        {!loading && <Sparkles className="h-4 w-4" />}
       </button>
     </form>
   );

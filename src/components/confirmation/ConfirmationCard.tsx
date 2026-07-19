@@ -16,10 +16,10 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
   const { graduate, event } = EVENT_DETAILS;
 
   return (
-    <div className="relative mx-auto max-w-3xl rounded-3xl border-4 border-pink-200/90 bg-white p-6 sm:p-12 shadow-2xl shadow-pink-200/50 overflow-hidden text-slate-900">
+    <div className="relative mx-auto max-w-3xl bg-[#fffcf9] shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-sm p-6 sm:p-12 overflow-visible text-slate-800">
       {/* Decorative Scrapbook Tape at Top */}
-      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-48 h-8 bg-pink-200/90 backdrop-blur-md rounded-sm border border-pink-300 shadow-md transform -rotate-1 flex items-center justify-center gap-1.5 text-xs font-bold text-pink-900 tracking-widest uppercase select-none">
-        <Ticket className="h-3.5 w-3.5 text-pink-700" />
+      <div className="absolute -top-3 left-4 sm:left-12 z-30 w-32 sm:w-48 h-7 sm:h-8 bg-gradient-to-r from-pink-200/90 to-rose-200/90 backdrop-blur-md transform -rotate-2 shadow-sm flex items-center justify-center gap-1.5 text-[9px] sm:text-[10px] font-bold text-pink-800 uppercase tracking-widest">
+        <Ticket className="h-3.5 w-3.5" />
         <span>Celebration Pass</span>
       </div>
 
@@ -200,24 +200,6 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
           <MapPin className="h-3.5 w-3.5 text-pink-600" />
           <span>{event.venueAddress}</span>
         </p>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Link
-          href="/"
-          className="w-full sm:w-auto text-center rounded-full bg-gradient-to-r from-pink-400 via-pink-500 to-rose-400 px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-pink-300/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
-        >
-          <span>Return to Celebration Home</span>
-          <Sparkles className="h-4 w-4" />
-        </Link>
-        <Link
-          href="/#wishlist"
-          className="w-full sm:w-auto text-center rounded-full bg-white border-2 border-pink-300 px-8 py-3.5 text-sm font-bold text-slate-900 hover:bg-pink-50 transition-all shadow-sm flex items-center justify-center gap-2"
-        >
-          <span>View Full Gift Wishlist</span>
-          <GiftIcon className="h-4 w-4 text-pink-500" />
-        </Link>
       </div>
     </div>
   );

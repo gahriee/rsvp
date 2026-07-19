@@ -1,100 +1,46 @@
-# Deployment & Database Setup Guide
+# Deployment Guide
 
-This document provides exact, step-by-step instructions for configuring the MongoDB Atlas cluster, connecting the GitHub repository to Vercel for automated deployments, and seeding the production database.
-
----
+This guide outlines the steps to deploy the Graduation RSVP application using Vercel for the Next.js frontend/backend routes, and MongoDB Atlas for the database.
 
 ## 1. MongoDB Atlas Setup
 
-To host the database in production using MongoDB Atlas:
+1. Sign up for a free account at [MongoDB Atlas](https://www.mongodb.com/atlas).
+2. Create a new project and provision a free shared cluster.
+3. Add `0.0.0.0/0` (allow access from anywhere) to the Network Access IP whitelist since Vercel serverless functions have dynamic IPs.
+4. Retrieve the **Mongo Connection URL** from the "Connect" -> "Connect your application" section. This is your production `MONGODB_URI`.
 
-1. **Create an Atlas Account and Cluster**
-   - Log in or sign up at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-   - Create a new project (e.g., `Graduation-RSVP`).
-   - Build a Database Cluster: Select the **FREE (M0)** shared tier, pick your preferred cloud provider (AWS, GCP, or Azure) and region closest to your primary audience.
+## 2. Vercel Deployment Setup
 
-2. **Configure Database Access (Credentials)**
-   - Navigate to **Database Access** in the left sidebar.
-   - Click **Add New Database User**.
-   - Choose **Password** authentication.
-   - Set a username (e.g., `rsvp_db_user`) and a strong password.
-   - Under **Database User Privileges**, select **Read and write to any database** (`readWrite`).
-   - Click **Add User** and save the credentials securely.
+1. Push your repository to GitHub.
+2. Log in to [Vercel](https://vercel.com/) and create a new project.
+3. Import your GitHub repository. Vercel will automatically detect the Next.js framework.
+4. Open the **Environment Variables** section in your Vercel project configuration and add the following variables:
 
-3. **Configure Network Access (IP Whitelisting)**
-   - Navigate to **Network Access** in the left sidebar.
-   - Click **Add IP Address**.
-   - Select **Allow Access from Anywhere** (`0.0.0.0/0`).
-     > *Note:* Serverless platforms like Vercel use dynamic outbound IP addresses, so allowing `0.0.0.0/0` is required for Next.js API routes to reliably connect to MongoDB Atlas.
-   - Click **Confirm**.
+### Environment Variables for Vercel
 
-4. **Obtain the Connection String**
-   - Navigate back to **Database** (Overview).
-   - Click **Connect** on your cluster.
-   - Select **Drivers** (Node.js driver).
-   - Copy the provided connection string URI, which looks like:
-     ```ini
-     mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-     ```
-   - Replace `<username>` and `<password>` with the credentials created in Step 2, and insert the database name `graduation-rsvp` right before the question mark (`?`):
-     ```ini
-     mongodb+srv://rsvp_db_user:YOUR_PASSWORD@cluster0.abcde.mongodb.net/graduation-rsvp?retryWrites=true&w=majority
-     ```
-   - This URI will be used as the `MONGODB_URI` environment variable.
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | The connection string copied from MongoDB Atlas in step 1. |
+| `NEXTAUTH_SECRET` | A secure random 32+ character string. Generate one using `openssl rand -base64 32`. |
+| `NEXTAUTH_URL` | The URL of your Vercel deployment (e.g., `https://your-domain.vercel.app`). |
+| `ADMIN_EMAIL` | The email address you want to use for the admin login. |
+| `ADMIN_PASSWORD` | A secure password for the admin dashboard. |
+| `SMTP_HOST` | Nodemailer/SMTP host for sending emails. |
+| `SMTP_PORT` | Nodemailer/SMTP port (typically 465 or 587). |
+| `SMTP_USER` | Nodemailer/SMTP username. |
+| `SMTP_PASS` | Nodemailer/SMTP password. |
+| `SMTP_FROM` | The sender address (e.g., `"Graduation RSVP" <rsvp@example.com>`). |
+| `NEXT_PUBLIC_SITE_URL` | The public-facing URL of your app for Open Graph images (e.g., `https://your-domain.vercel.app`). |
 
----
+> [!WARNING]
+> Ensure none of the sensitive secrets (database URI, passwords, SMTP credentials) are prefixed with `NEXT_PUBLIC_` as this would expose them to the client.
 
-## 2. Vercel Project Setup
+5. Click **Deploy**. Vercel will build the application using the configuration in `next.config.ts`. The default configuration is already optimized for Vercel.
 
-To deploy the Next.js application to Vercel:
+## 3. Built-in CI/CD
 
-1. **Import the Repository**
-   - Log in to your [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New... -> Project**.
-   - Connect your GitHub account if not already linked, and select the `graduation-rsvp` (or `rvsp`) repository.
+Since the application is deployed on Vercel, it acts as its own CI/CD pipeline. Every push to the `main` branch automatically triggers a new deployment. During the build process, Vercel will automatically run:
+- Type checking (`tsc`)
+- Linting (`eslint`)
 
-2. **Configure Build Settings**
-   - **Framework Preset:** Vercel will automatically detect **Next.js**. Leave the default build commands (`next build`) and output directory untouched.
-   - **Node.js Version:** Ensure Node.js 20.x or later is selected in Project Settings -> Node.js Version.
-
-3. **Configure Environment Variables**
-   - Expand the **Environment Variables** section during project setup (or go to Project Settings -> Environment Variables after importing).
-   - Add the required production variables:
-     | Key | Value / Example | Environment |
-     | :--- | :--- | :--- |
-     | `MONGODB_URI` | `mongodb+srv://...` (from Step 1.4) | Production, Preview, Development |
-     | `NEXTAUTH_SECRET` | A secure 32-character random string (`openssl rand -base64 32`) | Production, Preview, Development |
-     | `NEXTAUTH_URL` | Your production Vercel URL (e.g., `https://graduation-rsvp.vercel.app`) | Production |
-     | `ADMIN_EMAIL` | Admin login email address | Production, Preview |
-     | `ADMIN_PASSWORD` | Strong password for admin access | Production, Preview |
-     | `NEXT_PUBLIC_API_URL` | `/api/v1` | Production, Preview, Development |
-   - Click **Deploy**.
-
-4. **Verify Deployment**
-   - Once the build finishes, Vercel will assign a `.vercel.app` domain (and any configured custom domain).
-   - Visit the site to ensure the home page and API health endpoints load cleanly without errors.
-
----
-
-## 3. Database Seeding in Production
-
-After deploying the project and configuring `MONGODB_URI` on Vercel, populate your production MongoDB Atlas database with the initial gift registry items:
-
-1. **Run Seeding Locally Against Production DB**
-   - In your local development terminal, temporarily execute the seed script passing the production connection string explicitly:
-     ```bash
-     MONGODB_URI="mongodb+srv://rsvp_db_user:YOUR_PASSWORD@cluster0.abcde.mongodb.net/graduation-rsvp?retryWrites=true&w=majority" npm run seed
-     ```
-   - Alternatively, place the production URI inside your `.env.local` temporarily and run:
-     ```bash
-     npm run seed
-     ```
-   - *Expected Output:*
-     ```
-     Connected to MongoDB...
-     Cleared existing gifts.
-     Inserted X initial gifts successfully!
-     Database connection closed.
-     ```
-
-2. **Verify Seeded Data**
-   - You can verify the data was inserted successfully by visiting the `/api/v1/gifts` endpoint on your deployed Vercel domain (`https://your-domain.vercel.app/api/v1/gifts`) or by checking the **Collections** tab in MongoDB Atlas.
+If any of these checks fail, Vercel will safely abort the deployment, ensuring that no broken code reaches production.
