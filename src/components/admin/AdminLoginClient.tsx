@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, Eye, EyeOff, Loader2, Key } from "lucide-react";
+import { Eye, EyeOff, Loader2, Key } from "lucide-react";
 import toast from "react-hot-toast";
 
 export function AdminLoginClient() {
@@ -96,7 +96,7 @@ export function AdminLoginClient() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-pink-400 via-pink-500 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-serif font-bold text-lg shadow-xl shadow-pink-300/60 transition-all hover:scale-[1.01] hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-400 focus:ring-offset-2 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full rounded-full bg-pink-500 px-8 py-3 text-sm font-bold font-serif text-white shadow-md transition-all hover:bg-pink-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-pink-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -105,8 +105,7 @@ export function AdminLoginClient() {
             </>
           ) : (
             <>
-              <span>Access Dashboard</span>
-              <Lock className="w-4 h-4" />
+              <span>Login</span>
             </>
           )}
         </button>
