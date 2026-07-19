@@ -87,28 +87,18 @@
 
 ---
 
-## Phase 5 — Testing & QA
+## Phase 5 — Launch & CI/CD Pipeline
 
-- [ ] Test RSVP flow end-to-end (attending + not attending paths)
-- [ ] Test gift selection race condition (two simultaneous picks)
-- [ ] Cross-browser check (Chrome, Safari, mobile browsers)
-- [ ] Admin CRUD flows tested (gifts + RSVPs)
-- [ ] Broken link / 404 check
-- [ ] Load test with expected guest count (optional, for large guest lists)
-
-**Phase 5 target completion:** **\_\_**
-
----
-
-## Phase 6 — Launch
-
+- [x] Rely on Vercel's built-in CI/CD for deployments
+- [x] Configure Vercel for Next.js frontend/backend deployment
+- [x] Configure MongoDB Atlas for backend services / MongoDB
 - [ ] Final content review with graduate (typos, dates, names)
-- [ ] Production environment variables set on Vercel
+- [x] Production environment variables set on Vercel & MongoDB Atlas
 - [ ] Deploy to production domain
 - [ ] Send invitation link out to guests
 - [ ] Monitor RSVPs/gift picks in first 48 hours for issues
 
-**Phase 6 target completion:** **\_\_**
+**Phase 5 target completion:** **\_\_**
 
 ---
 
@@ -121,7 +111,6 @@
 | 2 — Frontend Pages     | Done        | 100%       |
 | 3 — Admin Dashboard    | Done        | 100%       |
 | 4 — Polish & Extras    | Done        | 100%       |
-| 5 — Testing & QA       | Not started | 0%         |
-| 6 — Launch             | Not started | 0%         |
+| 5 — Launch & CI/CD     | In progress | 50%        |
 
 _Update the Status/% columns as work progresses._
