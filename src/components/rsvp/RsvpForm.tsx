@@ -232,7 +232,6 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
             <div>
               <span className="block text-sm font-serif font-bold text-slate-900 flex items-center gap-1.5">
                 <span>Joyfully Attending</span>
-                <Check className="h-4 w-4 text-emerald-500" />
               </span>
               <span className="block text-xs text-slate-500 mt-0.5">
                 Can&apos;t wait to celebrate!

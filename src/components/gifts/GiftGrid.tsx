@@ -101,7 +101,7 @@ export function GiftGrid({
           </h3>
           <p className="text-sm font-semibold text-pink-600 mt-1">
             Gifts Available:{" "}
-            <span className="text-slate-900 font-extrabold text-base">
+            <span className="text-base">
               {availableCount}
             </span>{" "}
             / {totalCount}

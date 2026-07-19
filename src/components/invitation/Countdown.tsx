@@ -83,7 +83,7 @@ export function Countdown({ targetDate }: CountdownProps) {
           <span className="relative z-10 text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight tabular-nums font-serif">
             {String(block.value).padStart(2, "0")}
           </span>
-          <span className="relative z-10 mt-1 text-xs sm:text-sm font-semibold text-pink-500 uppercase tracking-wider">
+          <span className="relative z-10 mt-1 text-[10px] sm:text-sm font-semibold text-pink-500 uppercase tracking-normal sm:tracking-wider text-center">
             {block.label}
           </span>
         </div>

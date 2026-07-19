@@ -1,7 +1,5 @@
-fix(web): prevent iOS scroll and automate gift status
+style(web): refine registry and countdown text styling
 
-- Automate gift status based on maxReservations, removing manual toggles from admin UI.
-- Fix RSVP service data overwrite by using $pull when unreserving a gift.
-- Apply overflow-x-hidden to html tag to lock iOS horizontal scrolling.
-- Simplify MusicPlayer to a Play/Pause FAB, utilizing native interactions to bypass Safari autoplay blocks.
-- Switch default background music to the provided local MP3 track.
+- Remove dark text color override from GiftGrid availability counter to seamlessly match the pink theme.
+- Adjust Countdown labels font size and tracking to prevent text wrapping on mobile viewports.
+- Remove checkmark icon from the RSVP attendance selection label.
