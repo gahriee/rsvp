@@ -14,8 +14,10 @@ interface RawGiftDoc {
   name: string;
   description: string;
   imageUrl: string;
+  productLink?: string;
   status: "available" | "reserved";
-  reservedBy: mongoose.Types.ObjectId | string | null;
+  reservedBy: mongoose.Types.ObjectId[] | string[];
+  maxReservations: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
@@ -26,8 +28,10 @@ export function formatGiftDoc(doc: RawGiftDoc): Gift {
     name: doc.name,
     description: doc.description,
     imageUrl: doc.imageUrl,
+    productLink: doc.productLink,
     status: doc.status,
-    reservedBy: doc.reservedBy ? doc.reservedBy.toString() : null,
+    reservedBy: Array.isArray(doc.reservedBy) ? doc.reservedBy.map((id: mongoose.Types.ObjectId | string) => id.toString()) : [],
+    maxReservations: doc.maxReservations || 3,
     createdAt: doc.createdAt instanceof Date
       ? doc.createdAt.toISOString()
       : doc.createdAt?.toString(),
@@ -61,8 +65,10 @@ export async function createGift(data: CreateGiftInput): Promise<Gift> {
     name: data.name,
     description: data.description,
     imageUrl: data.imageUrl,
+    productLink: data.productLink,
     status: data.status || "available",
-    reservedBy: data.reservedBy ? new mongoose.Types.ObjectId(data.reservedBy) : null,
+    reservedBy: data.reservedBy ? data.reservedBy.map((id: string) => new mongoose.Types.ObjectId(id)) : [],
+    maxReservations: data.maxReservations ?? 3,
   });
   return formatGiftDoc(newGift.toObject() as RawGiftDoc);
 }
@@ -79,11 +85,13 @@ export async function updateGift(
   if (data.name !== undefined) updatePayload.name = data.name;
   if (data.description !== undefined) updatePayload.description = data.description;
   if (data.imageUrl !== undefined) updatePayload.imageUrl = data.imageUrl;
+  if (data.productLink !== undefined) updatePayload.productLink = data.productLink;
   if (data.status !== undefined) updatePayload.status = data.status;
+  if (data.maxReservations !== undefined) updatePayload.maxReservations = data.maxReservations;
   if (data.reservedBy !== undefined) {
     updatePayload.reservedBy = data.reservedBy
-      ? new mongoose.Types.ObjectId(data.reservedBy)
-      : null;
+      ? data.reservedBy.map((id: string) => new mongoose.Types.ObjectId(id))
+      : [];
   }
 
   const updated = await GiftModel.findByIdAndUpdate(
@@ -108,10 +116,11 @@ export async function deleteGift(id: string): Promise<boolean> {
     return false;
   }
 
-  if (gift.reservedBy) {
-    await RsvpModel.findByIdAndUpdate(gift.reservedBy, {
-      $set: { selectedGift: null },
-    });
+  if (gift.reservedBy && gift.reservedBy.length > 0) {
+    await RsvpModel.updateMany(
+      { _id: { $in: gift.reservedBy } },
+      { $set: { selectedGift: null } }
+    );
   }
 
   await GiftModel.findByIdAndDelete(id);
@@ -126,19 +135,29 @@ export async function reserveGiftAtomically(
     throw new GiftUnavailableError("Invalid gift ID or RSVP ID");
   }
   await connectToDatabase();
+  const giftObjectId = new mongoose.Types.ObjectId(giftId);
+  const rsvpObjectId = new mongoose.Types.ObjectId(rsvpId);
+
   const updatedGift = await GiftModel.findOneAndUpdate(
-    { _id: giftId, status: "available" },
+    { 
+      _id: giftObjectId, 
+      $expr: { $lt: [{ $size: { $ifNull: ["$reservedBy", []] } }, "$maxReservations"] },
+      reservedBy: { $ne: rsvpObjectId }
+    },
     {
-      $set: {
-        status: "reserved",
-        reservedBy: new mongoose.Types.ObjectId(rsvpId),
-      },
+      $push: { reservedBy: rsvpObjectId } as unknown as mongoose.UpdateQuery<RawGiftDoc>,
     },
     { returnDocument: "after" }
   ).lean<RawGiftDoc | null>();
 
   if (!updatedGift) {
     throw new GiftUnavailableError();
+  }
+
+  // Automatically update status if it reached max capacity
+  if (updatedGift.reservedBy.length >= updatedGift.maxReservations && updatedGift.status === "available") {
+    await GiftModel.updateOne({ _id: giftObjectId }, { $set: { status: "reserved" } });
+    updatedGift.status = "reserved";
   }
 
   return formatGiftDoc(updatedGift);

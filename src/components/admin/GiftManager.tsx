@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Gift } from "@/lib/types";
 import { GiftTable } from "./GiftTable";
 import { GiftModalForm } from "./GiftModalForm";
+import { Search, X, Plus } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface GiftManagerProps {
   initialGifts: Gift[];
@@ -19,44 +21,37 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
   const [giftToEdit, setGiftToEdit] = useState<Gift | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Gift | null>(null);
   const [isProcessingId, setIsProcessingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const handleOpenCreate = () => {
     setGiftToEdit(null);
     setIsModalOpen(true);
-    setError(null);
-    setSuccess(null);
   };
 
   const handleOpenEdit = (gift: Gift) => {
     setGiftToEdit(gift);
     setIsModalOpen(true);
-    setError(null);
-    setSuccess(null);
   };
 
   const handleModalSuccess = (savedGift: Gift, isNew: boolean) => {
     if (isNew) {
       setGifts((prev) => [savedGift, ...prev]);
-      setSuccess("New gift item added to the registry.");
+      toast.success("New gift item added to the registry.");
     } else {
       setGifts((prev) =>
         prev.map((g) => (g._id === savedGift._id ? savedGift : g))
       );
-      setSuccess("Gift item updated successfully.");
+      toast.success("Gift item updated successfully.");
     }
   };
 
   const handleToggleStatus = async (gift: Gift) => {
     try {
       setIsProcessingId(gift._id);
-      setError(null);
 
       const newStatus = gift.status === "available" ? "reserved" : "available";
       const payload: Record<string, unknown> = { status: newStatus };
       if (newStatus === "available") {
-        payload.reservedBy = null;
+        payload.reservedBy = [];
       }
 
       const res = await fetch(`/api/v1/gifts/${gift._id}`, {
@@ -67,7 +62,7 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setError(data.error || "Failed to toggle status");
+        toast.error(data.error || "Failed to toggle status");
         setIsProcessingId(null);
         return;
       }
@@ -75,9 +70,9 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
       setGifts((prev) =>
         prev.map((g) => (g._id === gift._id ? data.data : g))
       );
-      setSuccess(`Marked "${gift.name}" as ${newStatus}.`);
+      toast.success(`Marked "${gift.name}" as ${newStatus}.`);
     } catch {
-      setError("Network error toggling gift status");
+      toast.error("Network error toggling gift status");
     } finally {
       setIsProcessingId(null);
     }
@@ -88,7 +83,6 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
 
     try {
       setIsProcessingId(deleteTarget._id);
-      setError(null);
 
       const res = await fetch(`/api/v1/gifts/${deleteTarget._id}`, {
         method: "DELETE",
@@ -96,17 +90,17 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setError(data.error || "Failed to delete gift item");
+        toast.error(data.error || "Failed to delete gift item");
         setIsProcessingId(null);
         setDeleteTarget(null);
         return;
       }
 
       setGifts((prev) => prev.filter((g) => g._id !== deleteTarget._id));
-      setSuccess("Gift item deleted successfully.");
+      toast.success("Gift item deleted successfully.");
       setDeleteTarget(null);
     } catch {
-      setError("Network error while deleting gift");
+      toast.error("Network error while deleting gift");
     } finally {
       setIsProcessingId(null);
     }
@@ -128,83 +122,53 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
   const reservedCount = gifts.filter((g) => g.status === "reserved").length;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="space-y-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b-2 border-pink-100 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
-            Gift Registry Management
+          <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-slate-900 tracking-tight">
+            Gift Registry
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 text-sm font-serif mt-2">
             Add new gifts, update descriptions, and manage reservations.
           </p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 text-slate-950 font-bold text-sm shadow-lg shadow-purple-500/20 transition-all self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm shadow-md transition-colors duration-300 self-start sm:self-auto"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
+          <Plus className="w-5 h-5" />
           <span>Add Gift Item</span>
         </button>
       </div>
 
-      {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between">
-          <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-red-300 font-bold ml-4">
-            &times;
-          </button>
-        </div>
-      )}
-
-      {success && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center justify-between">
-          <span>{success}</span>
-          <button onClick={() => setSuccess(null)} className="text-emerald-300 font-bold ml-4">
-            &times;
-          </button>
-        </div>
-      )}
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-pink-100 shadow-sm">
           <button
             onClick={() => setFilterStatus("all")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterStatus === "all"
-                ? "bg-slate-800 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-pink-100 text-pink-800 shadow-inner"
+                : "text-slate-500 hover:text-pink-600 hover:bg-pink-50/50"
             }`}
           >
             All ({gifts.length})
           </button>
           <button
             onClick={() => setFilterStatus("available")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterStatus === "available"
-                ? "bg-emerald-500/20 text-emerald-400 shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-emerald-50 text-emerald-600 shadow-inner"
+                : "text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50"
             }`}
           >
             Available ({availableCount})
           </button>
           <button
             onClick={() => setFilterStatus("reserved")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterStatus === "reserved"
-                ? "bg-purple-500/20 text-purple-400 shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-rose-50 text-rose-600 shadow-inner"
+                : "text-slate-500 hover:text-rose-600 hover:bg-rose-50/50"
             }`}
           >
             Reserved ({reservedCount})
@@ -217,27 +181,15 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name or description..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 pl-10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 pl-10 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all font-medium shadow-sm"
           />
-          <svg
-            className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs font-bold"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-500 transition-colors"
             >
-              &times;
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -261,22 +213,27 @@ export function GiftManager({ initialGifts }: GiftManagerProps) {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold text-white">Delete Gift Item?</h3>
-            <p className="text-sm text-slate-400">
-              Are you sure you want to delete <strong className="text-white">{deleteTarget.name}</strong> from the registry? This action cannot be undone.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm w-full max-w-md p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative space-y-4">
+             {/* Washi Tape */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-32 h-8 bg-gradient-to-r from-red-200/90 to-rose-200/90 backdrop-blur-md transform -rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-red-800 uppercase tracking-widest">
+              Danger
+            </div>
+            
+            <h3 className="text-xl font-serif font-extrabold text-slate-900 text-center mt-2">Delete Gift Item?</h3>
+            <p className="text-sm font-serif text-slate-600 text-center">
+              Are you sure you want to delete <strong className="text-slate-900">{deleteTarget.name}</strong> from the registry? This action cannot be undone.
             </p>
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-center gap-3 pt-4 border-t border-pink-100">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
+                className="px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm font-bold font-serif transition-colors duration-300 shadow-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-sm transition-colors"
+                className="px-6 py-2.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold font-serif text-sm transition-colors duration-300 shadow-md"
               >
                 Confirm Delete
               </button>

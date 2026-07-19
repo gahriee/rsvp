@@ -1,4 +1,5 @@
 import React from "react";
+import { Calendar, Clock, MapPin, Shirt, Sparkles, Heart, ArrowRight } from "lucide-react";
 import { EVENT_DETAILS } from "@/lib/constants/eventDetails";
 
 export function EventDetails() {
@@ -8,14 +9,18 @@ export function EventDetails() {
   const mapDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
   return (
-    <section className="bg-slate-900 py-20 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="mx-auto max-w-5xl">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl bg-gradient-to-r from-indigo-200 via-white to-purple-200 bg-clip-text text-transparent">
-            Event & Schedule Details
+          <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-sm font-semibold text-pink-700 mb-4 shadow-sm">
+            <Sparkles className="h-4 w-4 text-pink-600" />
+            <span>Celebration Details</span>
+          </div>
+          <h2 className="text-3xl font-serif font-bold tracking-tight sm:text-5xl text-slate-900">
+            When & Where We Celebrate
           </h2>
-          <p className="mt-4 text-lg text-slate-300">
+          <p className="mt-4 text-lg text-slate-600">
             {copy.invitationMessage}
           </p>
         </div>
@@ -23,26 +28,13 @@ export function EventDetails() {
         {/* Event Schedule & Venue Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {/* Date & Time Card */}
-          <div className="rounded-3xl bg-slate-800/80 border border-slate-700/80 p-8 shadow-xl backdrop-blur-md flex flex-col justify-between transition-all hover:border-indigo-500/50">
+          <div className="rounded-3xl bg-white/90 border-2 border-pink-200/80 p-8 shadow-xl shadow-pink-100/60 backdrop-blur-md flex flex-col justify-between transition-all duration-300 hover:border-pink-300 hover:shadow-2xl hover:-translate-y-1 group">
             <div>
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 mb-6">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-100 text-pink-600 mb-6 shadow-inner text-2xl group-hover:scale-110 transition-transform">
+                <Calendar className="h-7 w-7 text-pink-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">When</h3>
-              <p className="text-2xl font-extrabold text-indigo-300">
+              <h3 className="text-xl font-serif font-bold text-slate-900 mb-2">When</h3>
+              <p className="text-2xl font-serif font-extrabold text-pink-500">
                 {new Date(event.date).toLocaleDateString("en-US", {
                   weekday: "long",
                   month: "long",
@@ -50,14 +42,15 @@ export function EventDetails() {
                   year: "numeric",
                 })}
               </p>
-              <p className="mt-2 text-lg text-slate-300 font-medium">
-                {event.time}
-              </p>
+              <div className="mt-3 flex items-center gap-2 text-lg text-slate-700 font-medium">
+                <Clock className="h-5 w-5 text-pink-500" />
+                <span>{event.time}</span>
+              </div>
             </div>
-            <div className="mt-6 pt-6 border-t border-slate-700/60">
-              <span className="text-sm text-slate-400">
+            <div className="mt-6 pt-6 border-t border-pink-100/80">
+              <span className="text-sm text-slate-600">
                 RSVP Deadline:{" "}
-                <strong className="text-amber-300 font-semibold">
+                <strong className="text-pink-600 font-semibold">
                   {new Date(event.rsvpDeadline).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -69,74 +62,49 @@ export function EventDetails() {
           </div>
 
           {/* Venue & Directions Card */}
-          <div className="rounded-3xl bg-slate-800/80 border border-slate-700/80 p-8 shadow-xl backdrop-blur-md flex flex-col justify-between transition-all hover:border-indigo-500/50">
+          <div className="rounded-3xl bg-white/90 border-2 border-pink-200/80 p-8 shadow-xl shadow-pink-100/60 backdrop-blur-md flex flex-col justify-between transition-all duration-300 hover:border-pink-300 hover:shadow-2xl hover:-translate-y-1 group">
             <div>
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/20 text-purple-400 mb-6">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-100 text-pink-600 mb-6 shadow-inner text-2xl group-hover:scale-110 transition-transform">
+                <MapPin className="h-7 w-7 text-pink-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Where</h3>
-              <p className="text-2xl font-extrabold text-purple-300">
+              <h3 className="text-xl font-serif font-bold text-slate-900 mb-2">Where</h3>
+              <p className="text-2xl font-serif font-extrabold text-pink-500">
                 {event.venueName}
               </p>
-              <p className="mt-2 text-base text-slate-300">
+              <p className="mt-2 text-base text-slate-600">
                 {event.venueAddress}
               </p>
-              <p className="mt-3 inline-block rounded-full bg-slate-700/60 px-3 py-1 text-xs font-semibold text-slate-300">
-                Dress Code: {event.dressCode}
-              </p>
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-pink-50 border border-pink-200/60 px-3.5 py-1.5 text-xs font-semibold text-pink-800">
+                <Shirt className="h-4 w-4 text-pink-600" />
+                <span>Dress Code: {event.dressCode}</span>
+              </div>
             </div>
-            <div className="mt-6 pt-6 border-t border-slate-700/60">
+            <div className="mt-6 pt-6 border-t border-pink-100/80">
               <a
                 href={mapDirectionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-pink-600 hover:text-pink-700 transition-colors underline-offset-4 hover:underline"
               >
-                Get Directions on Google Maps
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
+                <span>Get Directions on Google Maps</span>
+                <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </div>
         </div>
 
         {/* Graduate's Note / Bio Banner */}
-        <div className="rounded-3xl bg-gradient-to-r from-indigo-900/50 via-purple-900/50 to-indigo-900/50 border border-indigo-500/30 p-8 sm:p-10 text-center shadow-2xl backdrop-blur-xl">
-          <div className="mx-auto max-w-2xl">
-            <span className="text-xs uppercase tracking-widest text-indigo-300 font-bold">
-              A Note from {graduate.firstName}
-            </span>
-            <blockquote className="mt-4 text-xl sm:text-2xl font-medium italic text-white leading-relaxed">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-pink-400 via-pink-500 to-rose-400 p-8 sm:p-10 text-center shadow-2xl text-white">
+          {/* Subtle floral accents */}
+          <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/10 blur-xl" />
+          <div className="pointer-events-none absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-white/10 blur-xl" />
+
+          <div className="relative z-10 mx-auto max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1 text-xs uppercase tracking-widest text-pink-100 font-bold mb-3 backdrop-blur-md">
+              <Heart className="h-3.5 w-3.5 fill-white text-white" />
+              <span>A Heartfelt Note from {graduate.firstName}</span>
+            </div>
+            <blockquote className="mt-3 text-xl sm:text-2xl font-serif italic font-medium text-white leading-relaxed">
               &quot;{graduate.bioMessage}&quot;
             </blockquote>
           </div>

@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { Rsvp } from "@/lib/types";
 import { RsvpTable } from "./RsvpTable";
+import { Search, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface RsvpManagerProps {
   initialRsvps: Rsvp[];
@@ -18,8 +20,6 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
   const [deleteTarget, setDeleteTarget] = useState<Rsvp | null>(null);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   // Form state for edit modal
   const [editGuestName, setEditGuestName] = useState("");
@@ -35,13 +35,10 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
     setEditAttending(rsvp.attending);
     setEditNumberOfGuests(rsvp.numberOfGuests);
     setEditMessage(rsvp.message);
-    setError(null);
-    setSuccess(null);
   };
 
   const handleCloseEdit = () => {
     setEditingRsvp(null);
-    setError(null);
   };
 
   const handleSaveEdit = async (e: React.FormEvent) => {
@@ -50,7 +47,6 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
     try {
       setIsSaving(true);
-      setError(null);
 
       const res = await fetch(`/api/v1/rsvp/${editingRsvp._id}`, {
         method: "PATCH",
@@ -66,7 +62,7 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setError(data.error || "Failed to update RSVP");
+        toast.error(data.error || "Failed to update RSVP");
         setIsSaving(false);
         return;
       }
@@ -74,10 +70,10 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
       setRsvps((prev) =>
         prev.map((r) => (r._id === editingRsvp._id ? data.data : r))
       );
-      setSuccess("RSVP updated successfully.");
+      toast.success("RSVP updated successfully.");
       setEditingRsvp(null);
     } catch {
-      setError("Network error while updating RSVP");
+      toast.error("Network error while updating RSVP");
     } finally {
       setIsSaving(false);
     }
@@ -88,7 +84,6 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
     try {
       setIsDeletingId(deleteTarget._id);
-      setError(null);
 
       const res = await fetch(`/api/v1/rsvp/${deleteTarget._id}`, {
         method: "DELETE",
@@ -96,17 +91,17 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setError(data.error || "Failed to delete RSVP");
+        toast.error(data.error || "Failed to delete RSVP");
         setIsDeletingId(null);
         setDeleteTarget(null);
         return;
       }
 
       setRsvps((prev) => prev.filter((r) => r._id !== deleteTarget._id));
-      setSuccess("RSVP deleted successfully.");
+      toast.success("RSVP deleted successfully.");
       setDeleteTarget(null);
     } catch {
-      setError("Network error while deleting RSVP");
+      toast.error("Network error while deleting RSVP");
     } finally {
       setIsDeletingId(null);
     }
@@ -128,72 +123,54 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
   const decliningCount = rsvps.filter((r) => !r.attending).length;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="space-y-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b-2 border-pink-100 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-slate-900 tracking-tight">
             RSVP Management
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 text-sm font-serif mt-2">
             Track guest responses, party sizes, and celebratory notes.
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs">
-          <span className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+          <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold font-serif shadow-sm">
             {attendingCount} Attending
           </span>
-          <span className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 font-semibold">
+          <span className="px-3 py-1.5 rounded-full bg-slate-50 text-slate-500 border border-slate-200 font-bold font-serif shadow-sm">
             {decliningCount} Declined
           </span>
         </div>
       </div>
 
-      {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between">
-          <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-red-300 font-bold ml-4">
-            &times;
-          </button>
-        </div>
-      )}
-
-      {success && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center justify-between">
-          <span>{success}</span>
-          <button onClick={() => setSuccess(null)} className="text-emerald-300 font-bold ml-4">
-            &times;
-          </button>
-        </div>
-      )}
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-pink-100 shadow-sm">
           <button
             onClick={() => setFilterTab("all")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterTab === "all"
-                ? "bg-slate-800 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-pink-100 text-pink-800 shadow-inner"
+                : "text-slate-500 hover:text-pink-600 hover:bg-pink-50/50"
             }`}
           >
             All ({rsvps.length})
           </button>
           <button
             onClick={() => setFilterTab("attending")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterTab === "attending"
-                ? "bg-emerald-500/20 text-emerald-400 shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-emerald-50 text-emerald-600 shadow-inner"
+                : "text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50"
             }`}
           >
             Attending ({attendingCount})
           </button>
           <button
             onClick={() => setFilterTab("declining")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-xl text-xs font-bold font-serif transition-colors ${
               filterTab === "declining"
-                ? "bg-slate-800 text-slate-300 shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-rose-50 text-rose-600 shadow-inner"
+                : "text-slate-500 hover:text-rose-600 hover:bg-rose-50/50"
             }`}
           >
             Declined ({decliningCount})
@@ -206,27 +183,15 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name or email..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 pl-10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+            className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 pl-10 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all font-medium shadow-sm"
           />
-          <svg
-            className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs font-bold"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-500 transition-colors"
             >
-              &times;
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -241,45 +206,50 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
       {/* Edit Modal */}
       {editingRsvp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
-            <h2 className="text-xl font-bold text-white mb-4">Edit RSVP</h2>
-            <form onSubmit={handleSaveEdit} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm w-full max-w-lg p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative">
+            {/* Washi Tape Accent */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-32 h-8 bg-gradient-to-r from-pink-200/90 to-rose-200/90 backdrop-blur-md transform rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-pink-800 uppercase tracking-widest">
+              Edit RSVP
+            </div>
+
+            <h2 className="text-2xl font-serif font-extrabold text-slate-900 mb-6 text-center mt-2">Edit Details</h2>
+            <form onSubmit={handleSaveEdit} className="space-y-5">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
                   Guest Name
                 </label>
                 <input
                   type="text"
                   value={editGuestName}
                   onChange={(e) => setEditGuestName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
                   Email Address
                 </label>
                 <input
                   type="email"
                   value={editEmail}
                   onChange={(e) => setEditEmail(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                  <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
                     Attending?
                   </label>
                   <select
                     value={editAttending ? "yes" : "no"}
                     onChange={(e) => setEditAttending(e.target.value === "yes")}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm"
                   >
                     <option value="yes">Attending</option>
                     <option value="no">Declined</option>
@@ -287,7 +257,7 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                  <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
                     Number of Guests
                   </label>
                   <input
@@ -297,37 +267,37 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
                     disabled={!editAttending}
                     value={editNumberOfGuests}
                     onChange={(e) => setEditNumberOfGuests(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 disabled:opacity-40"
+                    className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm disabled:opacity-50 disabled:bg-slate-50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">
+                <label className="block text-sm font-serif font-bold text-slate-900 mb-2">
                   Message
                 </label>
                 <textarea
                   rows={3}
                   value={editMessage}
                   onChange={(e) => setEditMessage(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 resize-none"
+                  className="w-full bg-white border border-pink-200 rounded-2xl px-4 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-300/30 transition-all shadow-sm resize-none"
                   placeholder="Optional notes or congratulations..."
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-pink-100">
                 <button
                   type="button"
                   onClick={handleCloseEdit}
                   disabled={isSaving}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
+                  className="px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm font-bold font-serif transition-colors duration-300 shadow-sm disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm transition-colors duration-300 shadow-md disabled:opacity-50"
                 >
                   {isSaving ? "Saving..." : "Save Changes"}
                 </button>
@@ -339,23 +309,27 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold text-white">Delete RSVP Submission?</h3>
-            <p className="text-sm text-slate-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm w-full max-w-md p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative space-y-4">
+             {/* Washi Tape */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-32 h-8 bg-gradient-to-r from-red-200/90 to-rose-200/90 backdrop-blur-md transform -rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-red-800 uppercase tracking-widest">
+              Danger
+            </div>
+            <h3 className="text-xl font-serif font-extrabold text-slate-900 text-center mt-2">Delete RSVP?</h3>
+            <p className="text-sm font-serif text-slate-600 text-center">
               Are you sure you want to delete the RSVP from{" "}
-              <strong className="text-white">{deleteTarget.guestName}</strong>? This action cannot be undone.
+              <strong className="text-slate-900">{deleteTarget.guestName}</strong>? This action cannot be undone.
             </p>
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-center gap-3 pt-4 border-t border-pink-100">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
+                className="px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm font-bold font-serif transition-colors duration-300 shadow-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-sm transition-colors"
+                className="px-6 py-2.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold font-serif text-sm transition-colors duration-300 shadow-md"
               >
                 Confirm Delete
               </button>

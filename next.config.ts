@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["transilient-michiko-intriguedly.ngrok-free.dev"],
 };
 
 export default nextConfig;

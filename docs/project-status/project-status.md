@@ -69,13 +69,21 @@
 
 ## Phase 4 — Polish & Extras
 
-- [ ] Email confirmation on RSVP submit (Resend/Nodemailer)
-- [ ] Rate limiting on public API routes (`/api/rsvp`, `/api/gifts/[id]/reserve`)
-- [ ] SEO/meta tags + social share preview image (Open Graph)
-- [ ] Favicon + branding polish (colors, fonts matching invitation theme)
+- [x] Email confirmation on RSVP submit (Resend/Nodemailer)
+- [x] Rate limiting on public API routes (`/api/rsvp`, `/api/gifts/[id]/reserve`)
+- [x] SEO/meta tags + social share preview image (Open Graph)
+- [x] Favicon + branding polish (colors, fonts matching invitation theme)
+- [x] Creative & feminine UI redesign (floral scrapbook theme, Polaroid photo cards, custom gift garden layout)
+- [x] Pastel Pink color scheme shift & dedicated sections (Event Timeline, Dress Code, Google Map Navigation)
+- [x] Single-page website consolidation, envelope intro animation, framed hero, masonry photo wall, emoji removal, and Lucide icon modernization
+- [x] Replaced 'Sweet Memories' with 'Outfits Carousel'
+- [x] Admin UI redesign to match scrapbook theme
+- [x] Update Gift Model with Image Upload and Product Link
+- [x] Support multiple max reservations per gift
+- [x] Add background music to RSVP page
 - [ ] Analytics (optional — track RSVP conversion)
 
-**Phase 4 target completion:** **\_\_**
+**Phase 4 target completion:** **Completed (2026-07-19)**
 
 ---
 
@@ -112,7 +120,7 @@
 | 1 — Database & Backend | Done        | 100%       |
 | 2 — Frontend Pages     | Done        | 100%       |
 | 3 — Admin Dashboard    | Done        | 100%       |
-| 4 — Polish & Extras    | Not started | 0%         |
+| 4 — Polish & Extras    | Done        | 100%       |
 | 5 — Testing & QA       | Not started | 0%         |
 | 6 — Launch             | Not started | 0%         |
 

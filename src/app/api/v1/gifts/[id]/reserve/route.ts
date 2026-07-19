@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { reserveGiftAtomically } from "@/lib/services/giftService";
 import { reserveGiftSchema } from "@/lib/validators";
 import { GiftUnavailableError } from "@/lib/types";
+import { checkRateLimit } from "@/lib/services/rateLimitService";
 import { z } from "zod";
 
 interface RouteParams {
@@ -11,6 +12,18 @@ interface RouteParams {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    const rate = checkRateLimit(ip, 10, 60000);
+    if (!rate.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: { "X-RateLimit-Remaining": String(rate.remaining) },
+        }
+      );
+    }
+
     await connectToDatabase();
     const { id } = await params;
     const body = await request.json();

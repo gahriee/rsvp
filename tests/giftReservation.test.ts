@@ -28,14 +28,17 @@ describe("Atomic Gift Reservation Concurrency Test", () => {
     await RsvpModel.deleteMany({});
   });
 
-  it("simulates two concurrent reserveGiftAtomically calls for the same gift, ensuring exactly 1 succeeds and 1 throws GiftUnavailableError", async () => {
-    const gift = await GiftModel.create({
+  it("simulates concurrent reserveGiftAtomically calls for a gift with maxReservations 1, ensuring exactly 1 succeeds", async () => {
+    const giftDocs = await GiftModel.create([{
       name: "Coffee Maker",
       description: "High quality coffee maker",
       imageUrl: "https://example.com/coffee.jpg",
       status: "available",
-      reservedBy: null,
-    });
+      reservedBy: [],
+      maxReservations: 1,
+    }]);
+    
+    const gift = giftDocs[0];
 
     const rsvp1Id = new mongoose.Types.ObjectId().toString();
     const rsvp2Id = new mongoose.Types.ObjectId().toString();
@@ -57,6 +60,6 @@ describe("Atomic Gift Reservation Concurrency Test", () => {
 
     const updatedGift = await GiftModel.findById(gift._id);
     expect(updatedGift?.status).toBe("reserved");
-    expect(updatedGift?.reservedBy).not.toBeNull();
+    expect(updatedGift?.reservedBy.length).toBe(1);
   });
 });

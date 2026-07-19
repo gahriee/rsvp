@@ -12,14 +12,14 @@ export default function GiftsPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 animate-pulse">
-          <div className="h-8 w-48 rounded-lg bg-slate-800 mb-8" />
-          <div className="h-12 w-64 rounded-lg bg-slate-800 mb-4" />
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 animate-pulse relative z-10">
+          <div className="h-8 w-48 rounded-lg bg-pink-200/60 mb-8" />
+          <div className="h-12 w-64 rounded-lg bg-pink-200/60 mb-4" />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="h-96 rounded-2xl bg-slate-900 border border-slate-800"
+                className="h-96 rounded-3xl bg-white/80 border border-pink-200/80 shadow-md"
               />
             ))}
           </div>

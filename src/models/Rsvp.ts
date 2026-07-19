@@ -25,6 +25,11 @@ const rsvpSchema = new Schema<IRsvpDocument>(
   }
 );
 
+// Delete cached model in development to ensure schema updates are applied during HMR
+if (process.env.NODE_ENV !== "production") {
+  delete mongoose.models.Rsvp;
+}
+
 export const Rsvp: Model<IRsvpDocument> =
   mongoose.models.Rsvp || mongoose.model<IRsvpDocument>("Rsvp", rsvpSchema);
 export default Rsvp;

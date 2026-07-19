@@ -28,8 +28,10 @@ export interface Gift {
   name: string;
   description: string;
   imageUrl: string;
+  productLink?: string;
   status: GiftStatus;
-  reservedBy: string | null;
+  reservedBy: string[];
+  maxReservations: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -61,5 +63,18 @@ export interface AdminOverviewStats {
   totalGifts: number;
   availableGifts: number;
   reservedGifts: number;
+}
+
+export interface RateLimitStatus {
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+}
+
+export interface EmailSendResult {
+  success: boolean;
+  id?: string;
+  error?: string;
 }
 

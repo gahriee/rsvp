@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { AdminOverviewStats } from "@/lib/types";
+import { RefreshCw, Users, Mail, Gift, AlertCircle, ArrowRight } from "lucide-react";
 
 interface AdminOverviewClientProps {
   initialStats: AdminOverviewStats;
@@ -34,183 +35,150 @@ export function AdminOverviewClient({
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="space-y-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b-2 border-pink-100 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-slate-900 tracking-tight">
             Dashboard Overview
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 text-sm font-serif mt-2">
             Real-time attendance metrics and wishlist reservations.
           </p>
         </div>
         <button
           onClick={handleRefresh}
           disabled={isRefreshing}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium transition-colors border border-slate-700 self-start sm:self-auto disabled:opacity-50"
+          className="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-white border border-pink-200 text-pink-600 text-sm font-bold font-serif shadow-sm hover:bg-pink-50 transition-colors duration-300 self-start sm:self-auto disabled:opacity-50"
         >
-          <svg
-            className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
           <span>{isRefreshing ? "Refreshing..." : "Refresh Stats"}</span>
         </button>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-          {error}
+        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-sm shadow-sm flex items-center gap-2">
+          <AlertCircle className="w-5 h-5" />
+          <span>{error}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden shadow-xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">
-              Attendance
-            </span>
-            <svg
-              className="w-6 h-6 text-emerald-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
+      {/* Stats Cards (Polaroid/Paper Style) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        
+        {/* Card 1: Attendance */}
+        <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm p-6 relative shadow-[0_8px_30px_rgba(0,0,0,0.06)] transform hover:-translate-y-1 transition-all">
+          <div className="absolute -top-3 left-6 z-10 w-24 h-7 bg-gradient-to-r from-emerald-100 to-teal-100 backdrop-blur-md transform -rotate-2 shadow-sm flex items-center justify-center text-[10px] font-bold text-emerald-800 uppercase tracking-widest border border-emerald-200/50">
+            Attendance
           </div>
-          <div className="text-4xl font-extrabold text-white mb-1">
+          <div className="flex items-center justify-between mb-4 mt-2">
+            <div className="p-3 bg-emerald-50 rounded-full border border-emerald-100 text-emerald-500 shadow-inner">
+              <Users className="w-6 h-6" />
+            </div>
+            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Guests</span>
+          </div>
+          <div className="text-4xl font-serif font-extrabold text-slate-900 mb-1">
             {stats.totalGuestsAttending}
           </div>
-          <p className="text-sm text-slate-400">Total Guests Attending</p>
-          <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-            <span>{stats.attendingRsvps} attending RSVPs</span>
-            <span>{stats.decliningRsvps} declined</span>
+          <p className="text-sm font-serif font-bold text-slate-500">Total Attending</p>
+          <div className="mt-5 pt-4 border-t border-dashed border-emerald-200 flex items-center justify-between text-xs font-serif font-bold text-slate-500">
+            <span className="text-emerald-600">{stats.attendingRsvps} attending</span>
+            <span className="text-rose-400">{stats.decliningRsvps} declined</span>
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden shadow-xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
-              Responses
-            </span>
-            <svg
-              className="w-6 h-6 text-blue-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
+        {/* Card 2: Responses */}
+        <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm p-6 relative shadow-[0_8px_30px_rgba(0,0,0,0.06)] transform hover:-translate-y-1 transition-all">
+          <div className="absolute -top-3 left-6 z-10 w-24 h-7 bg-gradient-to-r from-blue-100 to-indigo-100 backdrop-blur-md transform rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-blue-800 uppercase tracking-widest border border-blue-200/50">
+            Responses
           </div>
-          <div className="text-4xl font-extrabold text-white mb-1">
+          <div className="flex items-center justify-between mb-4 mt-2">
+            <div className="p-3 bg-blue-50 rounded-full border border-blue-100 text-blue-500 shadow-inner">
+              <Mail className="w-6 h-6" />
+            </div>
+            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">RSVPs</span>
+          </div>
+          <div className="text-4xl font-serif font-extrabold text-slate-900 mb-1">
             {stats.totalRsvps}
           </div>
-          <p className="text-sm text-slate-400">Total RSVP Submissions</p>
-          <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-            <span>Response Rate Tracked</span>
+          <p className="text-sm font-serif font-bold text-slate-500">Total Submissions</p>
+          <div className="mt-5 pt-4 border-t border-dashed border-blue-200 flex items-center justify-between text-xs font-serif font-bold text-slate-500">
+            <span>Response Tracked</span>
             <Link
               href="/admin/rsvps"
-              className="text-blue-400 hover:text-blue-300 font-medium"
+              className="text-blue-600 hover:text-blue-500 flex items-center gap-1"
             >
-              Manage &rarr;
+              Manage <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden shadow-xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-md border border-purple-500/20">
-              Gift Registry
-            </span>
-            <svg
-              className="w-6 h-6 text-purple-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
-              />
-            </svg>
+        {/* Card 3: Registry */}
+        <div className="bg-[#fffcf9] border-2 border-pink-100 rounded-sm p-6 relative shadow-[0_8px_30px_rgba(0,0,0,0.06)] transform hover:-translate-y-1 transition-all">
+          <div className="absolute -top-3 left-6 z-10 w-24 h-7 bg-gradient-to-r from-purple-100 to-fuchsia-100 backdrop-blur-md transform -rotate-1 shadow-sm flex items-center justify-center text-[10px] font-bold text-purple-800 uppercase tracking-widest border border-purple-200/50">
+            Registry
           </div>
-          <div className="text-4xl font-extrabold text-white mb-1">
+          <div className="flex items-center justify-between mb-4 mt-2">
+            <div className="p-3 bg-purple-50 rounded-full border border-purple-100 text-purple-500 shadow-inner">
+              <Gift className="w-6 h-6" />
+            </div>
+            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Gifts</span>
+          </div>
+          <div className="text-4xl font-serif font-extrabold text-slate-900 mb-1">
             {stats.reservedGifts}{" "}
-            <span className="text-lg font-normal text-slate-500">
+            <span className="text-xl font-bold text-slate-400">
               / {stats.totalGifts}
             </span>
           </div>
-          <p className="text-sm text-slate-400">Gifts Claimed by Guests</p>
-          <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-            <span>{stats.availableGifts} gifts still available</span>
+          <p className="text-sm font-serif font-bold text-slate-500">Gifts Claimed</p>
+          <div className="mt-5 pt-4 border-t border-dashed border-purple-200 flex items-center justify-between text-xs font-serif font-bold text-slate-500">
+            <span className="text-emerald-600">{stats.availableGifts} available</span>
             <Link
               href="/admin/gifts"
-              className="text-purple-400 hover:text-purple-300 font-medium"
+              className="text-purple-600 hover:text-purple-500 flex items-center gap-1"
             >
-              Registry &rarr;
+              View <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
+
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-4">
         <Link
           href="/admin/rsvps"
-          className="group block bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-2xl p-6 transition-all shadow-lg"
+          className="group block bg-white hover:bg-pink-50/50 border-2 border-pink-100 hover:border-pink-300 rounded-2xl p-6 sm:p-8 transition-all shadow-sm hover:shadow-md"
         >
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
-              Manage Guest Responses
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-serif font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors flex items-center gap-2">
+              <Mail className="w-5 h-5 text-pink-400" />
+              Manage RSVPs
             </h2>
-            <span className="p-2 rounded-lg bg-slate-800 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
-              &rarr;
+            <span className="p-2 rounded-full bg-pink-50 text-pink-400 group-hover:bg-pink-100 group-hover:text-pink-600 transition-colors shadow-inner border border-pink-100">
+              <ArrowRight className="w-4 h-4" />
             </span>
           </div>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Search, filter, and edit incoming RSVPs. Adjust guest attendance
-            counts or remove duplicate submissions.
+          <p className="text-sm font-serif text-slate-600 leading-relaxed font-medium">
+            Search, filter, and edit incoming guest RSVPs. Adjust guest attendance
+            counts or remove duplicate submissions easily.
           </p>
         </Link>
 
         <Link
           href="/admin/gifts"
-          className="group block bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-purple-500/40 rounded-2xl p-6 transition-all shadow-lg"
+          className="group block bg-white hover:bg-pink-50/50 border-2 border-pink-100 hover:border-pink-300 rounded-2xl p-6 sm:p-8 transition-all shadow-sm hover:shadow-md"
         >
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">
-              Manage Gift Registry
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-serif font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors flex items-center gap-2">
+              <Gift className="w-5 h-5 text-pink-400" />
+              Manage Gifts
             </h2>
-            <span className="p-2 rounded-lg bg-slate-800 text-slate-400 group-hover:bg-purple-500/10 group-hover:text-purple-400 transition-colors">
-              &rarr;
+            <span className="p-2 rounded-full bg-pink-50 text-pink-400 group-hover:bg-pink-100 group-hover:text-pink-600 transition-colors shadow-inner border border-pink-100">
+              <ArrowRight className="w-4 h-4" />
             </span>
           </div>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Add new gifts with image URLs, modify existing item details, or
-            manually mark items as available or reserved.
+          <p className="text-sm font-serif text-slate-600 leading-relaxed font-medium">
+            Add new gifts, update descriptions and images, or
+            manually mark items as reserved or available in the registry.
           </p>
         </Link>
       </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Sparkles, Heart, Gift as GiftIcon, Mail, Check, AlertCircle, Users } from "lucide-react";
 import { CreateRsvpInput, Gift } from "@/lib/types";
 import { createRsvpSchema } from "@/lib/validators";
 import { fetchGiftById } from "@/lib/apiClient";
@@ -60,7 +61,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
           if (gift.status === "reserved") {
             setErrorGiftId(currentGiftId);
             setGiftErrorMessage(
-              "⚠️ This gift is already reserved by another guest. Please choose a different gift."
+              "This gift is already reserved by another guest. Please choose a different gift."
             );
           } else {
             setErrorGiftId(null);
@@ -122,7 +123,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
         errMsg.toLowerCase().includes("unavailable")
       ) {
         setError(
-          "⚠️ This gift was just claimed by another guest! Please choose a different gift from the registry or clear the gift selection to submit your RSVP."
+          "This gift was just claimed by another guest! Please choose a different gift from the registry or clear the gift selection to submit your RSVP."
         );
       } else {
         setError(errMsg);
@@ -137,11 +138,16 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
       onSubmit={(e) => {
         void handleSubmit(e);
       }}
-      className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:p-8 shadow-xl text-slate-200"
+      className="space-y-6 bg-[#fffcf9] shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-sm p-5 sm:p-8 md:p-12 relative overflow-visible text-slate-800"
     >
+      {/* Washi Tapes */}
+      <div className="absolute -top-3 left-4 sm:left-12 z-30 w-24 sm:w-32 h-7 sm:h-8 bg-gradient-to-r from-pink-200/90 to-rose-200/90 backdrop-blur-md transform -rotate-2 shadow-sm flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-pink-800 uppercase tracking-widest">
+        RSVP
+      </div>
       {error && (
-        <div className="rounded-xl border border-red-500/50 bg-red-950/50 p-4 text-sm font-medium text-red-200 shadow-sm">
-          {error}
+        <div className="rounded-2xl border border-red-300 bg-red-50 p-4 text-sm font-medium text-red-800 shadow-sm flex items-start gap-2.5">
+          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+          <span className="flex-1">{error}</span>
         </div>
       )}
 
@@ -149,7 +155,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
       <div>
         <label
           htmlFor="guestName"
-          className="block text-sm font-semibold text-slate-200"
+          className="block text-sm font-serif font-bold text-slate-900"
         >
           Full Name *
         </label>
@@ -158,12 +164,13 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
           type="text"
           value={guestName}
           onChange={(e) => setGuestName(e.target.value)}
-          placeholder="e.g. Jane Doe"
-          className="mt-2 block w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder-slate-500 shadow-inner focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
+          placeholder="e.g. Jane & John Doe"
+          className="mt-2 block w-full rounded-2xl border border-pink-200 bg-white px-4 py-3.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/30 transition-all font-medium"
         />
         {validationErrors.guestName && (
-          <p className="mt-1.5 text-xs font-semibold text-red-400">
-            {validationErrors.guestName}
+          <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+            <span>•</span>
+            <span>{validationErrors.guestName}</span>
           </p>
         )}
       </div>
@@ -172,7 +179,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-semibold text-slate-200"
+          className="block text-sm font-serif font-bold text-slate-900"
         >
           Email Address *
         </label>
@@ -182,106 +189,141 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="jane@example.com"
-          className="mt-2 block w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder-slate-500 shadow-inner focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
+          className="mt-2 block w-full rounded-2xl border border-pink-200 bg-white px-4 py-3.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/30 transition-all font-medium"
         />
+        <p className="mt-1 text-xs text-slate-500 flex items-center gap-1">
+          <span>We&apos;ll send your celebration confirmation and calendar details here.</span>
+          <Mail className="h-3 w-3 text-pink-500 inline" />
+        </p>
         {validationErrors.email && (
-          <p className="mt-1.5 text-xs font-semibold text-red-400">
-            {validationErrors.email}
+          <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+            <span>•</span>
+            <span>{validationErrors.email}</span>
           </p>
         )}
       </div>
 
       {/* Attending Status Radio Buttons */}
       <div>
-        <label className="block text-sm font-semibold text-slate-200">
-          Will you be attending the celebration? *
+        <label className="block text-sm font-serif font-bold text-slate-900">
+          Will you be joining us for the celebration? *
         </label>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label
             onClick={() => setAttending(true)}
-            className={`flex items-center gap-3 rounded-xl border p-4 cursor-pointer transition-all ${
+            className={`flex items-center gap-3.5 rounded-2xl border-2 p-4 cursor-pointer transition-all duration-300 ${
               attending
-                ? "border-indigo-500 bg-indigo-500/10 shadow-md ring-1 ring-indigo-500"
-                : "border-slate-800 bg-slate-950 hover:border-slate-700"
+                ? "border-pink-400 bg-pink-50/80 shadow-md scale-[1.01]"
+                : "border-pink-100 bg-white hover:border-pink-200 hover:bg-pink-50/30"
             }`}
           >
-            <input
-              type="radio"
-              checked={attending}
-              onChange={() => setAttending(true)}
-              className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-700"
-            />
-            <span className="text-sm font-semibold text-white">
-              🎉 Yes, joyfully accept!
-            </span>
+            <div className="relative flex items-center justify-center h-5 w-5 shrink-0">
+              <input
+                type="radio"
+                checked={attending}
+                onChange={() => setAttending(true)}
+                className="peer absolute inset-0 opacity-0 cursor-pointer z-10"
+              />
+              <div className="h-5 w-5 rounded-full border-2 border-pink-300 bg-white peer-checked:border-pink-500 peer-checked:bg-pink-500 peer-focus-visible:ring-4 peer-focus-visible:ring-pink-300/50 transition-all flex items-center justify-center">
+                <div className={`h-2 w-2 rounded-full bg-white transition-transform ${attending ? "scale-100" : "scale-0"}`} />
+              </div>
+            </div>
+            <div>
+              <span className="block text-sm font-serif font-bold text-slate-900 flex items-center gap-1.5">
+                <span>Joyfully Attending</span>
+                <Check className="h-4 w-4 text-emerald-500" />
+              </span>
+              <span className="block text-xs text-slate-500 mt-0.5">
+                Can&apos;t wait to celebrate!
+              </span>
+            </div>
           </label>
 
           <label
             onClick={() => setAttending(false)}
-            className={`flex items-center gap-3 rounded-xl border p-4 cursor-pointer transition-all ${
+            className={`flex items-center gap-3.5 rounded-2xl border-2 p-4 cursor-pointer transition-all duration-300 ${
               !attending
-                ? "border-indigo-500 bg-indigo-500/10 shadow-md ring-1 ring-indigo-500"
-                : "border-slate-800 bg-slate-950 hover:border-slate-700"
+                ? "border-pink-400 bg-pink-50/80 shadow-md scale-[1.01]"
+                : "border-pink-100 bg-white hover:border-pink-200 hover:bg-pink-50/30"
             }`}
           >
-            <input
-              type="radio"
-              checked={!attending}
-              onChange={() => setAttending(false)}
-              className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-700"
-            />
-            <span className="text-sm font-semibold text-slate-300">
-              😔 No, regretfully decline
-            </span>
+            <div className="relative flex items-center justify-center h-5 w-5 shrink-0">
+              <input
+                type="radio"
+                checked={!attending}
+                onChange={() => setAttending(false)}
+                className="peer absolute inset-0 opacity-0 cursor-pointer z-10"
+              />
+              <div className="h-5 w-5 rounded-full border-2 border-pink-300 bg-white peer-checked:border-pink-500 peer-checked:bg-pink-500 peer-focus-visible:ring-4 peer-focus-visible:ring-pink-300/50 transition-all flex items-center justify-center">
+                <div className={`h-2 w-2 rounded-full bg-white transition-transform ${!attending ? "scale-100" : "scale-0"}`} />
+              </div>
+            </div>
+            <div>
+              <span className="block text-sm font-serif font-bold text-slate-700">
+                Regretfully Declining
+              </span>
+              <span className="block text-xs text-slate-500 mt-0.5">
+                Will be cheering from afar!
+              </span>
+            </div>
           </label>
         </div>
       </div>
 
       {/* Number of Guests (if attending) */}
       {attending && (
-        <div>
+        <div className="bg-pink-50/50 rounded-2xl p-5 border border-pink-100 animate-fadeIn">
           <label
             htmlFor="numberOfGuests"
-            className="block text-sm font-semibold text-slate-200"
+            className="block text-sm font-serif font-bold text-slate-900"
           >
-            Number of Guests (including yourself) *
+            Total Guests Attending (including yourself) *
           </label>
-          <input
-            id="numberOfGuests"
-            type="number"
-            min={1}
-            max={10}
-            value={numberOfGuests}
-            onChange={(e) =>
-              setNumberOfGuests(parseInt(e.target.value, 10) || 1)
-            }
-            className="mt-2 block w-32 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white shadow-inner focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
-          />
+          <div className="mt-2.5 flex items-center gap-4">
+            <input
+              id="numberOfGuests"
+              type="number"
+              min={1}
+              max={10}
+              value={numberOfGuests}
+              onChange={(e) =>
+                setNumberOfGuests(parseInt(e.target.value, 10) || 1)
+              }
+              className="block w-28 rounded-xl border border-pink-200 bg-white px-4 py-3 text-center font-bold text-slate-900 shadow-sm focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/30 transition-all text-lg"
+            />
+            <span className="text-xs text-slate-600 font-medium flex items-center gap-1">
+              <Users className="h-4 w-4 text-pink-500 inline" />
+              <span>Guests (Max 10 per party)</span>
+            </span>
+          </div>
           {validationErrors.numberOfGuests && (
-            <p className="mt-1.5 text-xs font-semibold text-red-400">
-              {validationErrors.numberOfGuests}
+            <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
+              <span>•</span>
+              <span>{validationErrors.numberOfGuests}</span>
             </p>
           )}
         </div>
       )}
 
       {/* Gift Selection Box */}
-      <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+      <div className="rounded-2xl border-2 border-pink-100 bg-pink-50/30 p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h4 className="text-base font-bold text-white">
-              Gift Registry Selection
+            <h4 className="text-base font-serif font-bold text-slate-900 flex items-center gap-1.5">
+              <span>Gift Registry Selection</span>
+              <GiftIcon className="h-4 w-4 text-pink-500" />
             </h4>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Select an available gift from the graduate&apos;s wishlist to reserve with your RSVP.
+            <p className="text-xs text-slate-600 mt-0.5">
+              Select a wishlist gift to reserve with your RSVP, or browse the flower garden registry below.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href="/gifts?rsvp=true"
-              className="rounded-full bg-indigo-600/20 border border-indigo-500/40 px-4 py-2 text-xs font-bold text-indigo-300 hover:bg-indigo-600/30 transition-all"
+              href="#wishlist"
+              className="rounded-full bg-pink-400 border border-pink-300 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-pink-500 transition-all flex items-center gap-1"
             >
-              {currentGiftId ? "Change Gift" : "Browse & Choose Gift"}
+              <span>{currentGiftId ? "Change Gift" : "Browse Registry"}</span>
+              <GiftIcon className="h-3.5 w-3.5" />
             </Link>
             {currentGiftId && (
               <button
@@ -292,7 +334,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
                   setErrorGiftId(null);
                   setGiftErrorMessage(null);
                 }}
-                className="rounded-full bg-slate-800 border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700 hover:text-white transition-all"
+                className="rounded-full bg-white border border-pink-200 px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-pink-100 hover:text-pink-900 transition-all shadow-sm"
               >
                 Clear
               </button>
@@ -302,55 +344,66 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
 
         {/* Gift Loading/Preview */}
         {isGiftLoading && (
-          <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-900 p-3 animate-pulse">
-            <div className="h-12 w-12 rounded-lg bg-slate-800" />
+          <div className="mt-4 flex items-center gap-3 rounded-2xl bg-white p-4 animate-pulse border border-pink-100 shadow-sm">
+            <div className="h-14 w-14 rounded-xl bg-pink-100" />
             <div className="space-y-2 flex-1">
-              <div className="h-4 w-1/3 rounded bg-slate-800" />
-              <div className="h-3 w-2/3 rounded bg-slate-800" />
+              <div className="h-4 w-1/3 rounded bg-pink-100" />
+              <div className="h-3 w-2/3 rounded bg-pink-100" />
             </div>
           </div>
         )}
 
         {currentGiftError && (
-          <div className="mt-4 rounded-xl border border-amber-500/40 bg-amber-950/40 p-3 text-xs font-medium text-amber-200">
-            {currentGiftError}
+          <div className="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs font-semibold text-amber-900 shadow-sm flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
+            <span>{currentGiftError}</span>
           </div>
         )}
 
         {!isGiftLoading && giftPreview && (
-          <div className="mt-4 flex items-center gap-4 rounded-xl border border-slate-800 bg-slate-900/80 p-3">
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-slate-700">
+          <div className="mt-4 flex items-center gap-4 rounded-2xl border border-pink-200 bg-white p-4 shadow-md transition-all">
+            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-pink-100 shadow-inner">
               <Image
                 src={giftPreview.imageUrl}
                 alt={giftPreview.name}
                 fill
-                sizes="56px"
+                sizes="64px"
                 className="object-cover"
               />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate">
+              <p className="text-base font-serif font-bold text-slate-900 truncate">
                 {giftPreview.name}
               </p>
-              <p className="text-xs text-slate-400 line-clamp-1">
+              <p className="text-xs text-slate-500 line-clamp-1">
                 {giftPreview.description}
               </p>
             </div>
             <span
-              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
                 giftPreview.status === "reserved"
-                  ? "bg-red-500/20 text-red-300 border border-red-500/30"
-                  : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                  ? "bg-red-100 text-red-700 border border-red-200"
+                  : "bg-pink-100 text-pink-700 border border-pink-200"
               }`}
             >
-              {giftPreview.status === "reserved" ? "Taken" : "Selected"}
+              {giftPreview.status === "reserved" ? (
+                <>
+                  <span>Claimed</span>
+                  <Heart className="h-3 w-3 fill-current" />
+                </>
+              ) : (
+                <>
+                  <span>Selected</span>
+                  <Check className="h-3 w-3" />
+                </>
+              )}
             </span>
           </div>
         )}
 
         {!currentGiftId && !isGiftLoading && (
           <p className="mt-3 text-xs italic text-slate-500">
-            No gift currently selected. You may still submit your RSVP without choosing a gift.
+            No gift selected right now. You may still submit your RSVP without picking a gift!
           </p>
         )}
       </div>
@@ -359,17 +412,18 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
       <div>
         <label
           htmlFor="message"
-          className="block text-sm font-semibold text-slate-200"
+          className="block text-sm font-serif font-bold text-slate-900 flex items-center gap-1.5"
         >
-          Message or Congratulations for the Graduate (Optional)
+          <span>Note of Congratulations for Irish (Optional)</span>
+          <Mail className="h-4 w-4 text-pink-500 inline" />
         </label>
         <textarea
           id="message"
           rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Write a heartfelt note for the graduate..."
-          className="mt-2 block w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder-slate-500 shadow-inner focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
+          placeholder="Share your warmest wishes, favorite college memories, or words of wisdom..."
+          className="mt-2 block w-full rounded-2xl border border-pink-200 bg-white px-4 py-3.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/30 transition-all font-medium"
         />
       </div>
 
@@ -379,9 +433,10 @@ export function RsvpForm({ onSubmit, selectedGiftId = null }: RsvpFormProps) {
         disabled={
           loading || (giftPreview ? giftPreview.status === "reserved" : false)
         }
-        className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 font-bold text-white shadow-lg shadow-indigo-600/30 transition-all hover:from-blue-500 hover:to-indigo-500 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="w-full rounded-2xl bg-gradient-to-r from-pink-400 via-pink-500 to-rose-400 px-8 py-4 font-serif text-lg font-bold text-white shadow-xl shadow-pink-300/60 transition-all hover:from-pink-500 hover:to-rose-500 hover:scale-[1.01] hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
       >
-        {loading ? "Submitting your RSVP..." : "Submit RSVP"}
+        <span>{loading ? "Sending..." : "Submit"}</span>
+        {!loading && <Sparkles className="h-5 w-5" />}
       </button>
     </form>
   );

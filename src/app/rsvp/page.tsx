@@ -13,9 +13,9 @@ export default function RsvpPage() {
     <Suspense
       fallback={
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="h-8 w-48 rounded-lg bg-slate-800 animate-pulse mb-8" />
-          <div className="h-12 w-64 rounded-lg bg-slate-800 animate-pulse mb-4" />
-          <div className="h-96 w-full rounded-2xl bg-slate-900 border border-slate-800 animate-pulse" />
+          <div className="h-8 w-48 rounded-lg bg-pink-200/60 animate-pulse mb-8" />
+          <div className="h-12 w-64 rounded-lg bg-pink-200/60 animate-pulse mb-4" />
+          <div className="h-96 w-full rounded-3xl bg-white/80 border border-pink-200/80 animate-pulse shadow-lg" />
         </div>
       }
     >

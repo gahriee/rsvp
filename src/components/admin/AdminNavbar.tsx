@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, ExternalLink, LogOut } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function AdminNavbar() {
   const pathname = usePathname();
@@ -19,9 +21,11 @@ export function AdminNavbar() {
     try {
       setIsLoggingOut(true);
       await fetch("/api/v1/admin/logout", { method: "POST" });
+      toast.success("Successfully logged out");
       router.push("/admin/login");
       router.refresh();
     } catch {
+      toast.error("Failed to log out");
       setIsLoggingOut(false);
     }
   };
@@ -33,27 +37,27 @@ export function AdminNavbar() {
   ];
 
   return (
-    <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-lg">
+    <header className="bg-[#fffcf9] border-b-2 border-pink-100 text-slate-800 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <Link
               href="/admin"
-              className="flex items-center space-x-2 font-bold text-lg text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="flex items-center space-x-2 font-serif font-extrabold text-xl text-pink-600 hover:text-pink-500 transition-colors"
             >
-              <span>Celebration Admin</span>
+              <span>Admin Portal</span>
             </Link>
-            <nav className="hidden md:flex space-x-1">
+            <nav className="hidden md:flex space-x-2">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-full text-sm font-bold font-serif transition-all ${
                       isActive
-                        ? "bg-slate-800 text-emerald-400 shadow-sm"
-                        : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+                        ? "bg-pink-100 text-pink-700 shadow-inner border border-pink-200"
+                        : "text-slate-500 hover:bg-pink-50 hover:text-pink-600 border border-transparent"
                     }`}
                   >
                     {link.name}
@@ -63,32 +67,21 @@ export function AdminNavbar() {
             </nav>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/"
               target="_blank"
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 transition-colors flex items-center gap-1.5"
+              className="px-4 py-2 rounded-full text-xs font-bold font-serif text-slate-500 hover:text-pink-600 border border-slate-200 hover:border-pink-300 bg-white shadow-sm transition-all flex items-center gap-1.5"
             >
               <span>View Live Site</span>
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
+              <ExternalLink className="w-3.5 h-3.5" />
             </Link>
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-sm font-medium transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold font-serif transition-all shadow-sm disabled:opacity-50 flex items-center gap-1.5"
             >
+              <LogOut className="w-3.5 h-3.5" />
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
           </div>
@@ -96,38 +89,17 @@ export function AdminNavbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
+              className="p-2 rounded-lg text-slate-400 hover:text-pink-600 hover:bg-pink-50 focus:outline-none transition-colors"
               aria-label="Toggle Menu"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {mobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 pt-2 pb-4 space-y-2">
+        <div className="md:hidden border-t-2 border-pink-100 bg-[#fffcf9] px-4 pt-2 pb-4 space-y-2 shadow-inner">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -135,23 +107,24 @@ export function AdminNavbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-base font-medium ${
+                className={`block px-4 py-3 rounded-2xl text-base font-bold font-serif ${
                   isActive
-                    ? "bg-slate-800 text-emerald-400"
-                    : "text-slate-300 hover:bg-slate-800"
+                    ? "bg-pink-100 text-pink-700 shadow-inner border border-pink-200"
+                    : "text-slate-500 hover:bg-pink-50 hover:text-pink-600 border border-transparent"
                 }`}
               >
                 {link.name}
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-slate-800 flex flex-col gap-2">
+          <div className="pt-4 mt-2 border-t border-pink-100 flex flex-col gap-3">
             <Link
               href="/"
               target="_blank"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold font-serif text-slate-600 border border-slate-200 bg-white hover:bg-pink-50"
             >
+              <ExternalLink className="w-4 h-4" />
               View Live Site
             </Link>
             <button
@@ -160,8 +133,9 @@ export function AdminNavbar() {
                 handleLogout();
               }}
               disabled={isLoggingOut}
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold font-serif text-rose-600 border border-rose-200 bg-rose-50 hover:bg-rose-100 disabled:opacity-50"
             >
+              <LogOut className="w-4 h-4" />
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
           </div>

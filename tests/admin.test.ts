@@ -94,14 +94,14 @@ describe("Admin Authentication & Statistics Tests", () => {
         description: "Desc 2",
         imageUrl: "https://example.com/2.jpg",
         status: "reserved",
-        reservedBy: new mongoose.Types.ObjectId(),
+        reservedBy: [new mongoose.Types.ObjectId()],
       },
       {
         name: "Gift 3",
         description: "Desc 3",
         imageUrl: "https://example.com/3.jpg",
         status: "reserved",
-        reservedBy: new mongoose.Types.ObjectId(),
+        reservedBy: [new mongoose.Types.ObjectId()],
       },
     ]);
 
