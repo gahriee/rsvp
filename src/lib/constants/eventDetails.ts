@@ -80,8 +80,8 @@ export const EVENT_DETAILS: EventDetailsConfig = {
   event: {
     date: "2026-08-09",
     time: "6:00 PM – 8:00 PM",
-    venueName: "Jollibee Marilaque",
-    venueAddress: "Marilaque Highway, Tanay, Rizal, Philippines",
+    venueName: "Jollibee at SM Cherry",
+    venueAddress: "SM Cherry Antipolo, Marcos Highway, Antipolo, Rizal, Philippines",
     dressCode: "Semi-Formal Elegance · Neutral & Pastel Tones",
     rsvpDeadline: "2026-08-01",
   },
@@ -198,12 +198,12 @@ export const EVENT_DETAILS: EventDetailsConfig = {
     ],
   },
   navigation: {
-    googleMapsUrl: "https://www.google.com/maps/place/Jollibee+Marilaque/@14.6244927,121.1319853,1059m/data=!3m1!1e3!4m15!1m8!3m7!1s0x3397b90015d7e11d:0x5fbacbdc1c3fd310!2sJollibee+Marilaque!8m2!3d14.6245766!4d121.1323038",
-    appleMapsUrl: "https://maps.apple.com/?q=Jollibee+Marilaque+Tanay+Rizal",
-    parkingNotes: "Parking is available directly at the venue lot along Marilaque Highway. Look for Irish's graduation celebration welcome sign!",
+    googleMapsUrl: "https://www.google.com/maps/place/Jollibee+SM+Cherry+Antipolo/@14.624897,121.1338348,1059m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3397b96f9415d22f:0xb17e83968c0b5620!8m2!3d14.624897!4d121.1338348!16s%2Fg%2F11h3spw_p6?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+    appleMapsUrl: "https://maps.apple.com/?q=Jollibee+SM+Cherry+Antipolo",
+    parkingNotes: "Parking is available directly at the SM Cherry Antipolo parking lot. Look for Irish's graduation celebration welcome sign!",
     mapCoordinates: {
-      lat: 14.6245766,
-      lng: 121.1323038,
+      lat: 14.624897,
+      lng: 121.1338348,
     },
   },
 };

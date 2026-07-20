@@ -14,7 +14,6 @@ interface RawRsvpDoc {
   guestName: string;
   email: string;
   attending: boolean;
-  numberOfGuests: number;
   message: string;
   selectedGift: mongoose.Types.ObjectId | string | null;
   createdAt?: Date | string;
@@ -27,7 +26,6 @@ export function formatRsvpDoc(doc: RawRsvpDoc): Rsvp {
     guestName: doc.guestName,
     email: doc.email,
     attending: doc.attending,
-    numberOfGuests: doc.numberOfGuests,
     message: doc.message || "",
     selectedGift: doc.selectedGift ? doc.selectedGift.toString() : null,
     createdAt: doc.createdAt instanceof Date
@@ -75,7 +73,6 @@ export async function createRsvp(data: CreateRsvpInput): Promise<Rsvp> {
         guestName: data.guestName,
         email: data.email,
         attending: data.attending,
-        numberOfGuests: data.numberOfGuests,
         message: data.message || "",
         selectedGift: new mongoose.Types.ObjectId(data.selectedGift),
       });
@@ -92,7 +89,6 @@ export async function createRsvp(data: CreateRsvpInput): Promise<Rsvp> {
       guestName: data.guestName,
       email: data.email,
       attending: data.attending,
-      numberOfGuests: data.numberOfGuests,
       message: data.message || "",
       selectedGift: null,
     });
@@ -132,7 +128,6 @@ export async function updateRsvp(
   if (data.guestName !== undefined) updatePayload.guestName = data.guestName;
   if (data.email !== undefined) updatePayload.email = data.email;
   if (data.attending !== undefined) updatePayload.attending = data.attending;
-  if (data.numberOfGuests !== undefined) updatePayload.numberOfGuests = data.numberOfGuests;
   if (data.message !== undefined) updatePayload.message = data.message;
   if (data.selectedGift !== undefined) {
     updatePayload.selectedGift = data.selectedGift

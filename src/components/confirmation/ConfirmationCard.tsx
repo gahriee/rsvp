@@ -79,15 +79,7 @@ export function ConfirmationCard({ rsvp, gift }: ConfirmationCardProps) {
                 </p>
               </div>
 
-              {rsvp.attending && (
-                <div>
-                  <span className="text-xs text-slate-500">Total Party Size</span>
-                  <p className="text-base font-bold text-pink-900 mt-0.5 flex items-center gap-1.5">
-                    <span>{rsvp.numberOfGuests} {rsvp.numberOfGuests === 1 ? "Guest" : "Guests"} Reserved</span>
-                    <Sparkles className="h-3.5 w-3.5 text-pink-500" />
-                  </p>
-                </div>
-              )}
+
 
               <div>
                 <span className="text-xs text-slate-500">Confirmation Sent To</span>

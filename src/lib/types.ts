@@ -41,7 +41,6 @@ export interface Rsvp {
   guestName: string;
   email: string;
   attending: boolean;
-  numberOfGuests: number;
   message: string;
   selectedGift: string | null;
   createdAt?: string;
@@ -59,7 +58,6 @@ export interface AdminOverviewStats {
   totalRsvps: number;
   attendingRsvps: number;
   decliningRsvps: number;
-  totalGuestsAttending: number;
   totalGifts: number;
   availableGifts: number;
   reservedGifts: number;

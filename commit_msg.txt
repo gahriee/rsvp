@@ -1,5 +1,0 @@
-style(web): refine registry and countdown text styling
-
-- Remove dark text color override from GiftGrid availability counter to seamlessly match the pink theme.
-- Adjust Countdown labels font size and tracking to prevent text wrapping on mobile viewports.
-- Remove checkmark icon from the RSVP attendance selection label.

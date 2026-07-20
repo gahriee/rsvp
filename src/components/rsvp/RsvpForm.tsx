@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, Heart, Gift as GiftIcon, Mail, Check, AlertCircle, Users } from "lucide-react";
+import { Sparkles, Heart, Gift as GiftIcon, Mail, Check, AlertCircle } from "lucide-react";
 import { CreateRsvpInput, Gift } from "@/lib/types";
 import { createRsvpSchema } from "@/lib/validators";
 import { fetchGiftById } from "@/lib/apiClient";
@@ -18,7 +18,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
   const [guestName, setGuestName] = useState("");
   const [email, setEmail] = useState("");
   const [attending, setAttending] = useState(true);
-  const [numberOfGuests, setNumberOfGuests] = useState(1);
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,7 +93,6 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
       guestName,
       email,
       attending,
-      numberOfGuests: Number(numberOfGuests),
       message,
       selectedGift: currentGiftId || null,
     };
@@ -107,6 +106,15 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
         }
       });
       setValidationErrors(fieldErrors);
+      return;
+    }
+
+    if (!currentGiftId) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        selectedGift: "Bringing a gift is required. Please select one from the wishlist.",
+      }));
+      setError("Bringing a gift is required. Please select one from the wishlist.");
       return;
     }
 
@@ -270,40 +278,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
         </div>
       </div>
 
-      {/* Number of Guests (if attending) */}
-      {attending && (
-        <div className="bg-pink-50/50 rounded-2xl p-5 border border-pink-100 animate-fadeIn">
-          <label
-            htmlFor="numberOfGuests"
-            className="block text-sm font-serif font-bold text-slate-900"
-          >
-            Total Guests Attending (including yourself) *
-          </label>
-          <div className="mt-2.5 flex items-center gap-4">
-            <input
-              id="numberOfGuests"
-              type="number"
-              min={1}
-              max={10}
-              value={numberOfGuests}
-              onChange={(e) =>
-                setNumberOfGuests(parseInt(e.target.value, 10) || 1)
-              }
-              className="block w-28 rounded-xl border border-pink-200 bg-white px-4 py-3 text-center font-bold text-slate-900 shadow-sm focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/30 transition-all text-lg"
-            />
-            <span className="text-xs text-slate-600 font-medium flex items-center gap-1">
-              <Users className="h-4 w-4 text-pink-500 inline" />
-              <span>Guests (Max 10 per party)</span>
-            </span>
-          </div>
-          {validationErrors.numberOfGuests && (
-            <p className="mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">
-              <span>•</span>
-              <span>{validationErrors.numberOfGuests}</span>
-            </p>
-          )}
-        </div>
-      )}
+
 
       {/* Gift Selection Box */}
       <div className="rounded-2xl border-2 border-pink-100 bg-pink-50/30 p-6 shadow-sm">

@@ -37,7 +37,7 @@ export function RsvpTable({
               <th className="py-4 px-6">Guest Name</th>
               <th className="py-4 px-6">Email</th>
               <th className="py-4 px-6 text-center">Status</th>
-              <th className="py-4 px-6 text-center">Party Size</th>
+
               <th className="py-4 px-6">Message</th>
               <th className="py-4 px-6 text-right">Actions</th>
             </tr>
@@ -65,9 +65,7 @@ export function RsvpTable({
                       </span>
                     )}
                   </td>
-                  <td className="py-4 px-6 text-center font-bold text-slate-700 text-base">
-                    {rsvp.attending ? rsvp.numberOfGuests : "—"}
-                  </td>
+
                   <td className="py-4 px-6 text-slate-500 max-w-xs truncate font-serif italic">
                     {rsvp.message || (
                       <span className="text-slate-300">No message</span>

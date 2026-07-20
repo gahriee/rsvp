@@ -57,11 +57,6 @@ export async function sendRsvpConfirmationEmail(
               <strong style="color: #831843;">Status:</strong> ${rsvp.attending ? "Attending 🎉" : "Not Attending"}
             </p>
             
-            ${rsvp.attending ? `
-            <p style="margin: 10px 0; font-size: 15px;">
-              <strong style="color: #831843;">Guests Attending:</strong> ${rsvp.numberOfGuests}
-            </p>` : ""}
-            
             ${giftName ? `
             <div style="margin: 10px 0; font-size: 15px;">
               <strong style="color: #831843;">Selected Gift:</strong> ${giftName}

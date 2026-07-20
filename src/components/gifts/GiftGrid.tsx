@@ -97,9 +97,12 @@ export function GiftGrid({
         {/* Availability Header */}
         <div className="flex flex-col pt-2">
           <h3 className="text-lg font-serif font-bold text-slate-900">
-            Flower Garden Wishlist
+            Please Select a Gift
           </h3>
-          <p className="text-sm font-semibold text-pink-600 mt-1">
+          <p className="text-xs text-slate-600 mt-1 mb-2 max-w-md">
+            To make gift-giving easier, please choose one gift from Irish&apos;s wishlist. Your thoughtful present will be greatly appreciated and will make the celebration even more memorable.
+          </p>
+          <p className="text-sm font-semibold text-pink-600">
             Gifts Available:{" "}
             <span className="text-base">
               {availableCount}

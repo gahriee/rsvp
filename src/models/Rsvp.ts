@@ -4,7 +4,6 @@ export interface IRsvpDocument extends Document {
   guestName: string;
   email: string;
   attending: boolean;
-  numberOfGuests: number;
   message: string;
   selectedGift: Types.ObjectId | null;
   createdAt: Date;
@@ -16,7 +15,6 @@ const rsvpSchema = new Schema<IRsvpDocument>(
     guestName: { type: String, required: true },
     email: { type: String, required: true },
     attending: { type: Boolean, required: true },
-    numberOfGuests: { type: Number, required: true, min: 1 },
     message: { type: String, default: "" },
     selectedGift: { type: Schema.Types.ObjectId, ref: "Gift", default: null },
   },

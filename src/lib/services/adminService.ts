@@ -10,7 +10,6 @@ export async function getAdminOverviewStats(): Promise<AdminOverviewStats> {
     totalRsvps,
     attendingRsvps,
     decliningRsvps,
-    guestAggregation,
     totalGifts,
     availableGifts,
     reservedGifts,
@@ -18,23 +17,15 @@ export async function getAdminOverviewStats(): Promise<AdminOverviewStats> {
     RsvpModel.countDocuments({}),
     RsvpModel.countDocuments({ attending: true }),
     RsvpModel.countDocuments({ attending: false }),
-    RsvpModel.aggregate([
-      { $match: { attending: true } },
-      { $group: { _id: null, totalGuests: { $sum: "$numberOfGuests" } } },
-    ]),
     GiftModel.countDocuments({}),
     GiftModel.countDocuments({ status: "available" }),
     GiftModel.countDocuments({ status: "reserved" }),
   ]);
 
-  const totalGuestsAttending =
-    guestAggregation.length > 0 ? guestAggregation[0].totalGuests || 0 : 0;
-
   return {
     totalRsvps,
     attendingRsvps,
     decliningRsvps,
-    totalGuestsAttending,
     totalGifts,
     availableGifts,
     reservedGifts,

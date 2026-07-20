@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/invitation/Hero";
 import { CountdownSection } from "@/components/invitation/CountdownSection";
 import { DressCode } from "@/components/invitation/DressCode";
+import { Rules } from "@/components/invitation/Rules";
 import { OutfitsCarousel } from "@/components/invitation/OutfitsCarousel";
 import { MapNavigation } from "@/components/invitation/MapNavigation";
 import { RegistryAndRsvpSection } from "@/components/invitation/RegistryAndRsvpSection";
@@ -25,6 +26,7 @@ export default function HomePage() {
         <CountdownSection />
         <MapNavigation />
         <DressCode />
+        <Rules />
         <OutfitsCarousel />
         <Suspense
           fallback={

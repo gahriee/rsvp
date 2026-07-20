@@ -4,7 +4,6 @@ export const createRsvpSchema = z.object({
   guestName: z.string().min(1, "Guest name is required"),
   email: z.string().email("Invalid email address"),
   attending: z.boolean(),
-  numberOfGuests: z.number().int().min(1, "Number of guests must be at least 1"),
   message: z.string().optional().default(""),
   selectedGift: z.string().nullable().optional().default(null),
 });

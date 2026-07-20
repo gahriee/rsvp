@@ -77,7 +77,7 @@ export function AdminOverviewClient({
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Guests</span>
           </div>
           <div className="text-4xl font-serif font-extrabold text-slate-900 mb-1">
-            {stats.totalGuestsAttending}
+            {stats.attendingRsvps}
           </div>
           <p className="text-sm font-serif font-bold text-slate-500">Total Attending</p>
           <div className="mt-5 pt-4 border-t border-dashed border-emerald-200 flex items-center justify-between text-xs font-serif font-bold text-slate-500">
