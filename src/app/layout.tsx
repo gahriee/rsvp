@@ -8,7 +8,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const getSiteUrl = () => {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "http://localhost:3000";
+};
+
+const siteUrl = getSiteUrl();
 const title = `${EVENT_DETAILS.graduate.firstName}'s Graduation Celebration`;
 const description = `Join us in celebrating ${EVENT_DETAILS.graduate.fullName}'s graduation from ${EVENT_DETAILS.graduate.university}. RSVP and view the gift registry.`;
 
