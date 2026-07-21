@@ -381,7 +381,7 @@ export function RsvpForm({ onSubmit, selectedGiftId = null, onClearGift }: RsvpF
 
         {!currentGiftId && !isGiftLoading && (
           <p className="mt-3 text-xs italic text-slate-500">
-            No gift selected right now. You may still submit your RSVP without picking a gift!
+            No gift selected right now. A gift selection is required to submit your RSVP.
           </p>
         )}
       </div>

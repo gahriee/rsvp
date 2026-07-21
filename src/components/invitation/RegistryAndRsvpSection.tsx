@@ -134,7 +134,7 @@ export function RegistryAndRsvpSection() {
               <span>Gift Registry & Wishlist</span>
             </h2>
             <p className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed font-serif">
-              Your presence at our celebration is our greatest gift! However, if you would like to honor the graduate with a gift, please browse the wishlist below. Click on any gift card to select it and attach it directly to your RSVP form below. Items are reserved on a first-come, first-served basis.
+              Please browse and select a gift from the wishlist below. Click on any gift card to select it and attach it directly to your RSVP form below. Items are reserved on a first-come, first-served basis.
             </p>
           </div>
         </FadeSlideImage>

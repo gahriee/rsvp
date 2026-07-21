@@ -102,7 +102,7 @@ export function GiftsPageClient() {
           <GiftIcon className="h-8 w-8 text-pink-500 shrink-0" />
         </h1>
         <p className="mt-2 text-base sm:text-lg text-slate-600 max-w-3xl leading-relaxed">
-          Your presence at our celebration is our greatest gift! However, if you would like to honor the graduate with a gift, please browse the wishlist below. Items are reserved on a first-come, first-served basis.
+          Please browse and select a gift from the wishlist below. Items are reserved on a first-come, first-served basis.
         </p>
       </div>
 

@@ -23,7 +23,7 @@ export function Rules() {
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 flex items-center justify-center gap-3">
             <Sparkles className="h-6 w-6 text-pink-400" />
-            <span>Irish&apos;s Graduation Celebration Rules 🎉</span>
+            <span>Irish&apos;s Graduation Celebration Rules</span>
             <Sparkles className="h-6 w-6 text-pink-400" />
           </h2>
         </div>

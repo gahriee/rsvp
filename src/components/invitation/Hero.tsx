@@ -83,8 +83,8 @@ export function Hero() {
                     <span>{graduate.fullName}</span>
                   </h1>
                   <div className="mx-auto mt-3.5 h-0.5 w-24 bg-pink-300 rounded-full" />
-                  <p className="mt-3 text-xs sm:text-sm font-extrabold uppercase tracking-[0.28em] text-pink-700">
-                    {graduate.major} · {graduate.university}
+                  <p className="mt-3 text-xs sm:text-sm font-extrabold uppercase tracking-[0.28em] text-pink-700 leading-relaxed">
+                    {graduate.major} <br /> {graduate.university}
                   </p>
                   <p className="mt-2 text-xs sm:text-sm font-serif italic text-slate-500 max-w-md mx-auto">
                     &ldquo;Celebrating four years of dedication, growth, and academic achievement.&rdquo;
