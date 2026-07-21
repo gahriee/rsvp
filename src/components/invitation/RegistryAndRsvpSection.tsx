@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { Sparkles, CheckCircle2, RotateCcw, ArrowUp } from "lucide-react";
+import { Sparkles, CheckCircle2, RotateCcw, ArrowUp, RefreshCw } from "lucide-react";
 import { GiftGrid } from "@/components/gifts/GiftGrid";
 import { RsvpForm } from "@/components/rsvp/RsvpForm";
 import { ConfirmationCard } from "@/components/confirmation/ConfirmationCard";
@@ -125,10 +125,20 @@ export function RegistryAndRsvpSection() {
         {/* Title & Intro */}
         <FadeSlideImage direction="up">
           <div className="mb-10 text-center max-w-3xl mx-auto transition-all duration-500">
-            <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-xs font-semibold text-pink-700 mb-3 shadow-sm">
-              <Sparkles className="h-3.5 w-3.5 text-pink-500" />
-              <span>Celebration Wishlist</span>
-              <Sparkles className="h-3.5 w-3.5 text-pink-500" />
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-xs font-semibold text-pink-700 shadow-sm">
+                <Sparkles className="h-3.5 w-3.5 text-pink-500" />
+                <span>Celebration Wishlist</span>
+                <Sparkles className="h-3.5 w-3.5 text-pink-500" />
+              </div>
+              <button
+                onClick={() => void refreshGifts()}
+                disabled={loadingGifts}
+                className="p-1.5 rounded-full bg-white border border-pink-200 text-pink-600 hover:bg-pink-50 shadow-sm transition-all disabled:opacity-50"
+                title="Refresh Wishlist"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loadingGifts ? 'animate-spin' : ''}`} />
+              </button>
             </div>
             <h2 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-slate-900 flex items-center justify-center gap-3">
               <span>Gift Registry & Wishlist</span>

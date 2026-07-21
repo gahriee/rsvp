@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Gift } from "@/lib/types";
 import { GiftTable } from "./GiftTable";
 import { GiftModalForm } from "./GiftModalForm";
-import { Search, X, Plus } from "lucide-react";
+import { Search, X, Plus, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface GiftManagerProps {
@@ -23,6 +23,25 @@ export function GiftManager({ initialGifts, rsvpMap }: GiftManagerProps) {
   const [deleteTarget, setDeleteTarget] = useState<Gift | null>(null);
   const [viewClaimersGift, setViewClaimersGift] = useState<Gift | null>(null);
   const [isProcessingId, setIsProcessingId] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const res = await fetch("/api/v1/gifts");
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setGifts(data.data);
+        toast.success("Gifts refreshed");
+      } else {
+        toast.error("Failed to refresh gifts");
+      }
+    } catch {
+      toast.error("Network error while refreshing");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleOpenCreate = () => {
     setGiftToEdit(null);
@@ -102,13 +121,23 @@ export function GiftManager({ initialGifts, rsvpMap }: GiftManagerProps) {
             Add new gifts, update descriptions, and manage reservations.
           </p>
         </div>
-        <button
-          onClick={handleOpenCreate}
-          className="cursor-pointer inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm shadow-md transition-colors duration-300 self-start sm:self-auto"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Add Gift Item</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="cursor-pointer inline-flex items-center justify-center p-2.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-pink-600 hover:border-pink-200 hover:bg-pink-50 shadow-sm transition-colors duration-300 disabled:opacity-50"
+            title="Refresh Gifts"
+          >
+            <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            onClick={handleOpenCreate}
+            className="cursor-pointer inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold font-serif text-sm shadow-md transition-colors duration-300"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Add Gift Item</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

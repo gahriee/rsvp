@@ -88,7 +88,7 @@ export function GiftTable({
                     <span
                       className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold font-serif border shadow-sm ${
                         isReserved
-                          ? "bg-purple-50 text-purple-600 border-purple-200"
+                          ? "bg-red-50 text-red-600 border-red-200"
                           : "bg-emerald-50 text-emerald-600 border-emerald-200"
                       }`}
                     >

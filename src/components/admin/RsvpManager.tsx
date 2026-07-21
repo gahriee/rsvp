@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Rsvp } from "@/lib/types";
 import { RsvpTable } from "./RsvpTable";
-import { Search, X } from "lucide-react";
+import { Search, X, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface RsvpManagerProps {
@@ -19,6 +19,25 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
   const [deleteTarget, setDeleteTarget] = useState<Rsvp | null>(null);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
   const [viewMessageRsvp, setViewMessageRsvp] = useState<Rsvp | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const res = await fetch("/api/v1/rsvp");
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRsvps(data.data);
+        toast.success("RSVPs refreshed");
+      } else {
+        toast.error("Failed to refresh RSVPs");
+      }
+    } catch {
+      toast.error("Network error while refreshing");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return;
@@ -81,6 +100,14 @@ export function RsvpManager({ initialRsvps }: RsvpManagerProps) {
           <span className="px-3 py-1.5 rounded-full bg-slate-50 text-slate-500 border border-slate-200 font-bold font-serif shadow-sm">
             {decliningCount} Declined
           </span>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="p-1.5 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-pink-600 hover:border-pink-200 transition-colors shadow-sm disabled:opacity-50"
+            title="Refresh RSVPs"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
         </div>
       </div>
 
