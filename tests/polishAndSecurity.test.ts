@@ -48,7 +48,6 @@ describe("EmailService", () => {
     guestName: "Alice Graduate",
     email: "alice@example.com",
     attending: true,
-    numberOfGuests: 2,
     message: "So proud of you!",
     selectedGift: null,
   };

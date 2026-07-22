@@ -68,9 +68,9 @@ export function GiftCard({
         </div>
       )}
 
-      <div>
+      <div className="flex flex-col flex-1">
         {/* Photo Container styled like Polaroid photo area */}
-        <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-2xl border border-pink-100 bg-pink-50/60 shadow-inner">
+        <div className="relative mb-4 aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl border border-pink-100 bg-pink-50/60 shadow-inner">
           <Image
             src={gift.imageUrl}
             alt={gift.name}
@@ -82,7 +82,7 @@ export function GiftCard({
           />
         </div>
 
-        <div className="px-1">
+        <div className="px-1 flex flex-col flex-1">
           <h3 className="font-serif text-xl font-bold text-slate-900 tracking-tight group-hover:text-pink-500 transition-colors">
             {gift.name}
           </h3>
@@ -91,6 +91,8 @@ export function GiftCard({
               {gift.description}
             </p>
           )}
+
+          <div className="flex-1" />
 
           {gift.productLink && (
             <a

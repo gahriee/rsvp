@@ -103,13 +103,6 @@ export function MapNavigation() {
                 <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#FAF6F0] border-2 border-pink-200 shadow-inner z-20" />
                 <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#FAF6F0] border-2 border-pink-200 shadow-inner z-20" />
 
-                {/* Postal Cancellation Stamp Badge in Corner */}
-                <div className="absolute top-5 right-6 w-20 h-20 rounded-full border-2 border-dashed border-rose-300/70 flex items-center justify-center -rotate-12 pointer-events-none opacity-80">
-                  <div className="text-[9px] font-bold text-rose-500 uppercase tracking-tighter text-center leading-tight font-mono">
-                    POSTMARKED<br />• CITYVILLE •<br />AUG 2026
-                  </div>
-                </div>
-
                 {/* Ticket Top Section */}
                 <div>
                   <div className="flex items-center justify-between mb-5">
@@ -170,7 +163,7 @@ export function MapNavigation() {
                   allowFullScreen={false}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
                 />
               </div>
 

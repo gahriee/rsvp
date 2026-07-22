@@ -62,21 +62,18 @@ describe("Admin Authentication & Statistics Tests", () => {
         guestName: "Alice Smith",
         email: "alice@example.com",
         attending: true,
-        numberOfGuests: 2,
         message: "Excited!",
       },
       {
         guestName: "Bob Jones",
         email: "bob@example.com",
         attending: true,
-        numberOfGuests: 3,
         message: "Can't wait!",
       },
       {
         guestName: "Charlie Brown",
         email: "charlie@example.com",
         attending: false,
-        numberOfGuests: 1,
         message: "Sorry, out of town.",
       },
     ]);
@@ -110,7 +107,6 @@ describe("Admin Authentication & Statistics Tests", () => {
     expect(stats.totalRsvps).toBe(3);
     expect(stats.attendingRsvps).toBe(2);
     expect(stats.decliningRsvps).toBe(1);
-    expect(stats.totalGuestsAttending).toBe(5); // 2 + 3
     expect(stats.totalGifts).toBe(3);
     expect(stats.availableGifts).toBe(1);
     expect(stats.reservedGifts).toBe(2);
